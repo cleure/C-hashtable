@@ -156,10 +156,10 @@ HT_ARGS((
     
     uint32_t i;
     if (freefn != NULL) {
-        for (i = 0; i < table->size; i++) {
-            if (table->table[i].key != NULL) {
+        for (i = 0; i < table->used; i++) {
+            if (table->entries[i] && table->entries[i]->key) {
                 /* Call freefn() */
-                freefn(&table->table[i]);
+                freefn(table->entries[i]);
             }
         }
     }
@@ -227,19 +227,19 @@ HT_ARGS((
     tmp_table.used = 0;
     
     /* Iterate over source */
-    for (i = 0; i < table->size; i++) {
-        if (!table->table[i].key) continue;
+    for (i = 0; i < table->used; i++) {
         
         /* Add entries to new table array */
         res = HT_FUNC(htable_add)(
                         &tmp_table,
-                        table->table[i].key,
-                        table->table[i].data,
+                        table->entries[i]->key,
+                        table->entries[i]->data,
                         NULL);
         
         /* Catch error */
         if (!res) {
             free(new_table);
+            free(new_entries);
             return 0;
         }
     }
