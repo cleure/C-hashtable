@@ -23,34 +23,29 @@ HT_STRUCT(htable) *
 HT_FUNC(htable_new)
 HT_ARGS((uint32_t size))
 {
-    HT_STRUCT(htable) *table =
-        malloc(sizeof(HT_STRUCT(htable)));
+    HT_STRUCT(htable) *table = malloc(sizeof(*table));
     
     if (!table) {
         return NULL;
     }
     
-    memset(table, 0, sizeof(HT_STRUCT(htable)));
+    memset(table, 0, sizeof(*table));
     
-    table->table =
-        malloc(sizeof(HT_STRUCT(htable_entry)) * size);
-    
+    table->table = malloc(sizeof(*table->table) * size);
     if (!table->table) {
         free(table);
         return NULL;
     }
     
-    table->entries =
-        malloc(sizeof(HT_STRUCT(htable_entry) *) * size);
-    
+    table->entries = malloc(sizeof(*table->entries) * size);
     if (!table->entries) {
         free(table->table);
         free(table);
         return NULL;
     }
     
-    memset(table->table, 0, sizeof(HT_STRUCT(htable_entry)) * size);
-    memset(table->entries, 0, sizeof(HT_STRUCT(htable_entry) *) * size);
+    memset(table->table, 0, sizeof(*table->table) * size);
+    memset(table->entries, 0, sizeof(*table->entries) * size);
     table->size = size;
     table->used = 0;
     
@@ -91,13 +86,13 @@ HT_ARGS((
         return NULL;
     }
     
-    table = malloc(sizeof(HT_STRUCT(htable_entry)) * src->size);
+    table = malloc(sizeof(*table) * src->size);
     if (!table) {
         free(dst);
         return NULL;
     }
     
-    entries = malloc(sizeof(HT_STRUCT(htable_entry) *) * src->size);
+    entries = malloc(sizeof(*entries) * src->size);
     if (!entries) {
         free(table);
         free(dst);
@@ -105,11 +100,11 @@ HT_ARGS((
     }
     
     // Copy memory
-    memcpy(dst, src, sizeof(HT_STRUCT(htable)));
+    memcpy(dst, src, sizeof(*dst));
     
     // Zero out
-    memset(table, 0, sizeof(HT_STRUCT(htable_entry)) * src->size);
-    memset(entries, 0, sizeof(HT_STRUCT(htable_entry) *) * src->size);
+    memset(table, 0, sizeof(*table) * src->size);
+    memset(entries, 0, sizeof(*entries) * src->size);
     
     // Link pointers
     dst->table = table;
@@ -204,12 +199,12 @@ HT_ARGS((
         return 1;
     }
     
-    new_table = malloc(sizeof(HT_STRUCT(htable_entry)) * new_size);
+    new_table = malloc(sizeof(*new_table) * new_size);
     if (!new_table) {
         return 0;
     }
     
-    new_entries = malloc(sizeof(HT_STRUCT(htable_entry) *) * new_size);
+    new_entries = malloc(sizeof(*new_entries) * new_size);
     if (!new_entries) {
         free(new_table);
         return 0;
@@ -217,8 +212,8 @@ HT_ARGS((
     
     /* Zero out */
     memset(&tmp_table, 0, sizeof(tmp_table));
-    memset(new_table, 0, sizeof(HT_STRUCT(htable_entry)) * new_size);
-    memset(new_entries, 0, sizeof(HT_STRUCT(htable_entry) *) * new_size);
+    memset(new_table, 0, sizeof(*new_table) * new_size);
+    memset(new_entries, 0, sizeof(*new_entries) * new_size);
     
     /* Set variables on tmp_table */
     tmp_table.table = new_table;
@@ -369,7 +364,7 @@ HT_ARGS((
             }
             
             /* Zero out entry */
-            memset(&table->table[hash], 0, sizeof(HT_STRUCT(htable_entry)));
+            memset(&table->table[hash], 0, sizeof(*table->table));
             
             /* Decrement used count */
             table->used--;
@@ -462,14 +457,12 @@ HT_ARGS((
         max_size = a->used;
     }
     
-    list = malloc(
-        sizeof(HT_STRUCT(htable_entry) *) * (max_size+1));
-    
+    list = malloc(sizeof(*list) * (max_size+1));
     if (!list) {
         return NULL;
     }
     
-    memset(list, 0, sizeof(HT_STRUCT(htable_entry) *) * (max_size+1));
+    memset(list, 0, sizeof(*list) * (max_size+1));
     head = list;
     
     for (i = 0; i < a->used; i++) {
@@ -527,14 +520,12 @@ HT_ARGS((
         max_size = b->used;
     }
     
-    list = malloc(
-        sizeof(HT_STRUCT(htable_entry) *) * (max_size+1));
-    
+    list = malloc(sizeof(*list) * (max_size+1));
     if (!list) {
         return NULL;
     }
     
-    memset(list, 0, sizeof(HT_STRUCT(htable_entry) *) * (max_size+1));
+    memset(list, 0, sizeof(*list) * (max_size+1));
     head = list;
     
     for (i = 0; i < a->used; i++) {
