@@ -1,0 +1,83 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		60D5D6B71649DAF900DD305F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = CMakeLists.txt; path = ../../CMakeLists.txt; sourceTree = "<group>"; };
+		60D5D6B81649DAF900DD305F /* config.h.in */ = {isa = PBXFileReference; lastKnownFileType = text; name = config.h.in; path = ../../config.h.in; sourceTree = "<group>"; };
+		60D5D6B91649DAF900DD305F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		60D5D6BA1649DAF900DD305F /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../src; sourceTree = "<group>"; };
+		60D5D6BB1649DB1F00DD305F /* tests */ = {isa = PBXFileReference; lastKnownFileType = folder; name = tests; path = ../../tests; sourceTree = "<group>"; };
+		60D5D6BC1649EE0B00DD305F /* TODO.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = TODO.txt; path = ../../TODO.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		60D5D6AE1649DAEB00DD305F = {
+			isa = PBXGroup;
+			children = (
+				60D5D6B71649DAF900DD305F /* CMakeLists.txt */,
+				60D5D6B81649DAF900DD305F /* config.h.in */,
+				60D5D6B91649DAF900DD305F /* README.md */,
+				60D5D6BC1649EE0B00DD305F /* TODO.txt */,
+				60D5D6BA1649DAF900DD305F /* src */,
+				60D5D6BB1649DB1F00DD305F /* tests */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		60D5D6B01649DAEC00DD305F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Sumner High/WebSprockets";
+			};
+			buildConfigurationList = 60D5D6B31649DAEC00DD305F /* Build configuration list for PBXProject "C-hashtable" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 60D5D6AE1649DAEB00DD305F;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		60D5D6B51649DAED00DD305F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		60D5D6B61649DAED00DD305F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		60D5D6B31649DAEC00DD305F /* Build configuration list for PBXProject "C-hashtable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60D5D6B51649DAED00DD305F /* Debug */,
+				60D5D6B61649DAED00DD305F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 60D5D6B01649DAEC00DD305F /* Project object */;
+}

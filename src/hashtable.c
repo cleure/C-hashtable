@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <stdint.h>
 
+#include "config.h"
 #define __HT_INTERNAL
 #include "hashtable.h"
 #include "MurmurHash3.h"
@@ -99,14 +100,14 @@ HT_ARGS((
         return NULL;
     }
     
-    // Copy memory
+    /* Copy memory */
     memcpy(dst, src, sizeof(*dst));
     
-    // Zero out
+    /* Zero out */
     memset(table, 0, sizeof(*table) * src->size);
     memset(entries, 0, sizeof(*entries) * src->size);
     
-    // Link pointers
+    /* Link pointers */
     dst->table = table;
     dst->entries = entries;
     
