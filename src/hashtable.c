@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "config.h"
+
 #define __HT_INTERNAL
 #include "hashtable.h"
 #include "MurmurHash3.h"
@@ -25,13 +26,11 @@ HT_FUNC(htable_new)
 HT_ARGS((uint32_t size))
 {
     HT_STRUCT(htable) *table = malloc(sizeof(*table));
-    
     if (!table) {
         return NULL;
     }
     
     memset(table, 0, sizeof(*table));
-    
     table->table = malloc(sizeof(*table->table) * size);
     if (!table->table) {
         free(table);
@@ -151,6 +150,7 @@ HT_ARGS((
 )) {
     
     uint32_t i;
+    
     if (freefn != NULL) {
         for (i = 0; i < table->used; i++) {
             if (table->entries[i] && table->entries[i]->key) {
@@ -308,6 +308,7 @@ HT_ARGS((
             table->table[hash].entry = table->used;
             table->entries[table->used] = &table->table[hash];
             table->used++;
+            
         replace:
             table->table[hash].key = key;
             table->table[hash].data = data;

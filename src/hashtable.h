@@ -3,10 +3,6 @@
 #include "config.h"
 #include "hashtable-config.h"
 
-#ifdef USE_PTHREAD
-  #include <pthread.h>
-#endif
-
 #ifdef __HT_INTERNAL
   #define HT_EXTERN
 #else
