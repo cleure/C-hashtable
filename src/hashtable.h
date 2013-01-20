@@ -19,8 +19,8 @@
 
 #define HT_ARGS(in) in
 
-struct HT_TYPE(htable_entry);
-struct HT_TYPE(htable);
+struct HT_EXPORT(htable_entry);
+struct HT_EXPORT(htable);
 
 /* htable_copyfn type definition */
 typedef

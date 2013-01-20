@@ -64,7 +64,7 @@ int main(int argc, char **argv)
         printf("%d\t%s\n", table->entries[i]->hash, table->entries[i]->key);
     }
     
-    printf("%d %d\n", table->used, sizeof(data)/sizeof(data[0]) + sizeof(data2)/sizeof(data2[0]));
+    /*printf("%d %d\n", table->used, sizeof(data)/sizeof(data[0]) + sizeof(data2)/sizeof(data2[0]));*/
     htable_delete(table, &freefn);
     
     return 0;
