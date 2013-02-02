@@ -22,7 +22,3 @@ Methods:
 	struct htable_entry ** htable_intersect(struct htable *a, struct htable *b);
 
 	struct htable_entry ** htable_difference(struct htable *a, struct htable *b);
-
-TODO:
-    
-    - Get rid of unneeded symbol Macros, and replace them with HT_EXPORT(SYM)

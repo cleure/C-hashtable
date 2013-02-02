@@ -1,6 +1,5 @@
 #pragma once
 
-/* Uncomment these for namespacing. */
+/*== Uncomment these for namespacing. ==*/
 
-/* #define HT_FUNC(in) my_namespace##in */
-/* #define HT_TYPE(in) my_namespace##in */
+/* #define HT_EXPORT(in) my_namespace##in */

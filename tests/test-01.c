@@ -5,6 +5,7 @@
 
 #include "config.h"
 #include "hashtable.h"
+#include "MurmurHash3.h"
 
     char *data[] = {
         "foo", "bar", "baz", "biz", "zap", "meow",
@@ -26,11 +27,21 @@ void freefn(struct htable_entry *a)
 void *add_entries1(void *ptr)
 {
     int i;
+    int res;
     struct htable *table = ptr;
     
     for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
-        htable_add(table, data[i], NULL, NULL);
+        res = htable_add_loop(table, data[i], NULL, NULL, 4);
+    
+        if (!res) {
+            printf("Failed to add: %s\n", data[i]);
+        } else {
+            printf("Added %s in %d tries\n", data[i], res);
+        }
+        //htable_add(table, data[i], NULL, NULL);
     }
+    
+    printf("Table Size: %d\n", table->size);
     
     return NULL;
 }
@@ -51,7 +62,7 @@ int main(int argc, char **argv)
 {
     int i;
     pthread_t thread1, thread2;
-    struct htable *table = htable_new(64);
+    struct htable *table = htable_new(16);
     
     pthread_create(&thread1, NULL, add_entries1, table);
     //pthread_create(&thread2, NULL, add_entries2, table);

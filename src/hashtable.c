@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "config.h"
 
@@ -10,7 +11,7 @@
 #include "hashtable.h"
 #include "MurmurHash3.h"
 
-#define HT_STRUCT(in) struct HT_TYPE(in)
+#define HT_STRUCT(in) struct HT_EXPORT(in)
 
 /**
 * htable_new()
@@ -22,7 +23,7 @@
 *               NULL on error
 **/
 HT_STRUCT(htable) *
-HT_FUNC(htable_new)
+HT_EXPORT(htable_new)
 HT_ARGS((uint32_t size))
 {
     HT_STRUCT(htable) *table = malloc(sizeof(*table));
@@ -49,6 +50,9 @@ HT_ARGS((uint32_t size))
     table->size = size;
     table->used = 0;
     
+    srand(time(NULL));
+    table->seed = rand();
+    
     return table;
 }
 
@@ -70,15 +74,15 @@ HT_ARGS((uint32_t size))
 *               NULL on error
 **/
 HT_EXTERN HT_STRUCT(htable) *
-HT_FUNC(htable_clone)
+HT_EXPORT(htable_clone)
 HT_ARGS((
     HT_STRUCT(htable) *src,
-    HT_FUNC(htable_copyfn) copyfn
+    HT_EXPORT(htable_copyfn) copyfn
 )) {
     
     uint32_t i, hash;
     
-    HT_STRUCT(htable) *dst = HT_FUNC(htable_new)(src->size);
+    HT_STRUCT(htable) *dst = HT_EXPORT(htable_new)(src->size);
     HT_STRUCT(htable_entry) *table,
                             **entries;
     
@@ -143,10 +147,10 @@ HT_ARGS((
 * @return   void
 **/
 void
-HT_FUNC(htable_delete)
+HT_EXPORT(htable_delete)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    HT_FUNC(htable_freefn) freefn
+    HT_EXPORT(htable_freefn) freefn
 )) {
     
     uint32_t i;
@@ -180,7 +184,7 @@ HT_ARGS((
 * @return   0 on error, 1 on success
 **/
 int
-HT_FUNC(htable_resize)
+HT_EXPORT(htable_resize)
 HT_ARGS((
     HT_STRUCT(htable) *table,
     uint8_t load_thresh,
@@ -226,7 +230,7 @@ HT_ARGS((
     for (i = 0; i < table->used; i++) {
         
         /* Add entries to new table array */
-        res = HT_FUNC(htable_add)(
+        res = HT_EXPORT(htable_add)(
                         &tmp_table,
                         table->entries[i]->key,
                         table->entries[i]->data,
@@ -267,19 +271,19 @@ HT_ARGS((
 * @return   0 on error, 1 on success
 **/
 int
-HT_FUNC(htable_add)
+HT_EXPORT(htable_add)
 HT_ARGS((
     HT_STRUCT(htable) *table,
     char *key,
     void *data,
-    HT_FUNC(htable_freefn) freefn
+    HT_EXPORT(htable_freefn) freefn
 )) {
     
     uint32_t hash,
              step = 0;
     
     /* Get initial hash */
-    MurmurHash3_x86_32(key, strlen(key), 0, &hash);
+    MurmurHash3_x86_32(key, strlen(key), table->seed, &hash);
     
     do {
         /* Quadratic Probing Function:
@@ -317,6 +321,54 @@ HT_ARGS((
 }
 
 /**
+* htable_add_loop()
+*
+* Unlink htable_add(), which will fail on its first try, htable_add_loop()
+* will try a maximum of "max_loops" times to add an item before giving up.
+* It uses a quadratic resizing algorithm, so its best to keep max_loops
+* relatively small.
+*
+* @param    struct htable *table
+* @param    char *key
+* @param    void *data
+* @param    void (*freefn)(struct htable_entry *)
+*               If not null, will be called when an item is replaced.
+* @param    int max_loops
+*
+* @return   0 on failure, otherwise the number of loops it took to
+*           successfully add item.
+**/
+int
+HT_EXPORT(htable_add_loop)
+HT_ARGS((
+    HT_STRUCT(htable) *table,
+    char *key,
+    void *data,
+    HT_EXPORT(htable_freefn) freefn,
+    int max_loops
+)) {
+    int loop;
+    int chunk = table->size;
+    int size = table->size;
+    
+    max_loops++;
+    for (loop = 1; loop < max_loops; loop++) {
+        if (HT_EXPORT(htable_add)(table, key, data, freefn)) {
+            return loop;
+        }
+        
+        size += chunk;
+        chunk += (chunk / 2);
+        
+        if (!HT_EXPORT(htable_resize)(table, 0, size)) {
+            return 0;
+        }
+    }
+    
+    return 0;
+}
+
+/**
 * htable_remove()
 *
 * Remove item from hash table.
@@ -330,18 +382,18 @@ HT_ARGS((
 * @return   0 on error, 1 on success
 **/
 int
-HT_FUNC(htable_remove)
+HT_EXPORT(htable_remove)
 HT_ARGS((
     HT_STRUCT(htable) *table,
     char *key,
-    HT_FUNC(htable_freefn) freefn
+    HT_EXPORT(htable_freefn) freefn
 )) {
 
     uint32_t hash,
              step = 0;
     
     /* Get initial hash */
-    MurmurHash3_x86_32(key, strlen(key), 0, &hash);
+    MurmurHash3_x86_32(key, strlen(key), table->seed, &hash);
     
     do {
         /* Quadratic Probing */
@@ -389,7 +441,7 @@ HT_ARGS((
 * @return   NULL on error, pointer on success
 **/
 HT_STRUCT(htable_entry) *
-HT_FUNC(htable_get)
+HT_EXPORT(htable_get)
 HT_ARGS((
     HT_STRUCT(htable) *table,
     char *key
@@ -399,7 +451,7 @@ HT_ARGS((
              step = 0;
     
     /* Get initial hash */
-    MurmurHash3_x86_32(key, strlen(key), 0, &hash);
+    MurmurHash3_x86_32(key, strlen(key), table->seed, &hash);
     
     do {
         /* Quadratic Probing */
@@ -442,7 +494,7 @@ HT_ARGS((
 *               NULL on error
 **/
 HT_STRUCT(htable_entry) **
-HT_FUNC(htable_intersect)
+HT_EXPORT(htable_intersect)
 HT_ARGS((
     HT_STRUCT(htable) *a,
     HT_STRUCT(htable) *b
@@ -468,7 +520,7 @@ HT_ARGS((
     head = list;
     
     for (i = 0; i < a->used; i++) {
-        tmp = HT_FUNC(htable_get)(b, a->entries[i]->key);
+        tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key);
         
         if (tmp != NULL) {
             list[0] = tmp;
@@ -505,7 +557,7 @@ HT_ARGS((
 *               NULL on error
 **/
 HT_STRUCT(htable_entry) **
-HT_FUNC(htable_difference)
+HT_EXPORT(htable_difference)
 HT_ARGS((
     HT_STRUCT(htable) *a,
     HT_STRUCT(htable) *b
@@ -531,7 +583,7 @@ HT_ARGS((
     head = list;
     
     for (i = 0; i < a->used; i++) {
-        tmp = HT_FUNC(htable_get)(b, a->entries[i]->key);
+        tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key);
         if (!tmp) {
             list[0] = a->entries[i];
             list++;

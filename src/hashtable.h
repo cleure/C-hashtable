@@ -9,37 +9,33 @@
   #define HT_EXTERN extern
 #endif
 
-#ifndef HT_FUNC
-  #define HT_FUNC(in) in
+#ifndef HT_EXPORT
+    #define HT_EXPORT(SYM) SYM
 #endif
 
-#ifndef HT_TYPE
-  #define HT_TYPE(in) in
-#endif
-
-#define HT_ARGS(in) in
+#define HT_ARGS(SYM) SYM
 
 struct HT_EXPORT(htable_entry);
 struct HT_EXPORT(htable);
 
 /* htable_copyfn type definition */
 typedef
-void (* HT_FUNC(htable_copyfn))
+void (* HT_EXPORT(htable_copyfn))
 HT_ARGS((
-    struct HT_TYPE(htable_entry) *dst,
+    struct HT_EXPORT(htable_entry) *dst,
     char *key,
     void *data
 ));
 
 /* htable_freefn type definition */
 typedef
-void (* HT_FUNC(htable_freefn))
+void (* HT_EXPORT(htable_freefn))
 HT_ARGS((
-    struct HT_TYPE(htable_entry) *ptr
+    struct HT_EXPORT(htable_entry) *ptr
 ));
 
 /* Hash Table Entry */
-struct HT_TYPE(htable_entry) {
+struct HT_EXPORT(htable_entry) {
     char *key;
     void *data;
     uint32_t entry;
@@ -47,11 +43,12 @@ struct HT_TYPE(htable_entry) {
 };
 
 /* Hash Table */
-struct HT_TYPE(htable) {
-    struct HT_TYPE(htable_entry) *table;
-    struct HT_TYPE(htable_entry) **entries;
+struct HT_EXPORT(htable) {
+    struct HT_EXPORT(htable_entry) *table;
+    struct HT_EXPORT(htable_entry) **entries;
     uint32_t size;
     uint32_t used;
+    uint32_t seed;
 };
 
 /************************************************************************
@@ -67,8 +64,8 @@ struct HT_TYPE(htable) {
 * @return   struct htable *
 *               NULL on error
 **/
-HT_EXTERN struct HT_TYPE(htable) *
-HT_FUNC(htable_new)
+HT_EXTERN struct HT_EXPORT(htable) *
+HT_EXPORT(htable_new)
 HT_ARGS((
     uint32_t size
 ));
@@ -89,11 +86,11 @@ HT_ARGS((
 * @return   struct htable *
 *               NULL on error
 **/
-HT_EXTERN struct HT_TYPE(htable) *
-HT_FUNC(htable_clone)
+HT_EXTERN struct HT_EXPORT(htable) *
+HT_EXPORT(htable_clone)
 HT_ARGS((
-    struct HT_TYPE(htable) *src,
-    HT_FUNC(htable_copyfn) copyfn
+    struct HT_EXPORT(htable) *src,
+    HT_EXPORT(htable_copyfn) copyfn
 ));
 
 /**
@@ -108,10 +105,10 @@ HT_ARGS((
 * @return   void
 **/
 HT_EXTERN void
-HT_FUNC(htable_delete)
+HT_EXPORT(htable_delete)
 HT_ARGS((
-    struct HT_TYPE(htable) *table,
-    HT_FUNC(htable_freefn) freefn
+    struct HT_EXPORT(htable) *table,
+    HT_EXPORT(htable_freefn) freefn
 ));
 
 /**
@@ -129,9 +126,9 @@ HT_ARGS((
 * @return   0 on error, 1 on success
 **/
 HT_EXTERN int
-HT_FUNC(htable_resize)
+HT_EXPORT(htable_resize)
 HT_ARGS((
-    struct HT_TYPE(htable) *table,
+    struct HT_EXPORT(htable) *table,
     uint8_t load_thresh,
     uint32_t new_size
 ));
@@ -154,12 +151,40 @@ HT_ARGS((
 * @return   0 on error, 1 on success
 **/
 HT_EXTERN int
-HT_FUNC(htable_add)
+HT_EXPORT(htable_add)
 HT_ARGS((
-    struct HT_TYPE(htable) *table,
+    struct HT_EXPORT(htable) *table,
     char *key,
     void *data,
-    HT_FUNC(htable_freefn) freefn
+    HT_EXPORT(htable_freefn) freefn
+));
+
+/**
+* htable_add_loop()
+*
+* Unlink htable_add(), which will fail on its first try, htable_add_loop()
+* will try a maximum of "max_loops" times to add an item before giving up.
+* It uses a quadratic resizing algorithm, so its best to keep max_loops
+* relatively small.
+*
+* @param    struct htable *table
+* @param    char *key
+* @param    void *data
+* @param    void (*freefn)(struct htable_entry *)
+*               If not null, will be called when an item is replaced.
+* @param    int max_loops
+*
+* @return   0 on failure, otherwise the number of loops it took to
+*           successfully add item.
+**/
+HT_EXTERN int
+HT_EXPORT(htable_add_loop)
+HT_ARGS((
+    struct HT_EXPORT(htable) *table,
+    char *key,
+    void *data,
+    HT_EXPORT(htable_freefn) freefn,
+    int max_loops
 ));
 
 /**
@@ -176,11 +201,11 @@ HT_ARGS((
 * @return   0 on error, 1 on success
 **/
 HT_EXTERN int
-HT_FUNC(htable_remove)
+HT_EXPORT(htable_remove)
 HT_ARGS((
-    struct HT_TYPE(htable) *table,
+    struct HT_EXPORT(htable) *table,
     char *key,
-    HT_FUNC(htable_freefn) freefn
+    HT_EXPORT(htable_freefn) freefn
 ));
 
 /**
@@ -192,10 +217,10 @@ HT_ARGS((
 * @param    char *key
 * @return   NULL on error, pointer on success
 **/
-HT_EXTERN struct HT_TYPE(htable_entry) *
-HT_FUNC(htable_get)
+HT_EXTERN struct HT_EXPORT(htable_entry) *
+HT_EXPORT(htable_get)
 HT_ARGS((
-    struct HT_TYPE(htable) *table,
+    struct HT_EXPORT(htable) *table,
     char *key
 ));
 
@@ -228,11 +253,11 @@ HT_ARGS((
 * @return   struct htable_entry **
 *               NULL on error
 **/
-HT_EXTERN struct HT_TYPE(htable_entry) **
-HT_FUNC(htable_intersect)
+HT_EXTERN struct HT_EXPORT(htable_entry) **
+HT_EXPORT(htable_intersect)
 HT_ARGS((
-    struct HT_TYPE(htable) *a,
-    struct HT_TYPE(htable) *b
+    struct HT_EXPORT(htable) *a,
+    struct HT_EXPORT(htable) *b
 ));
 
 /**
@@ -260,16 +285,15 @@ HT_ARGS((
 * @return   struct htable_entry **
 *               NULL on error
 **/
-HT_EXTERN struct HT_TYPE(htable_entry) **
-HT_FUNC(htable_difference)
+HT_EXTERN struct HT_EXPORT(htable_entry) **
+HT_EXPORT(htable_difference)
 HT_ARGS((
-    struct HT_TYPE(htable) *a,
-    struct HT_TYPE(htable) *b
+    struct HT_EXPORT(htable) *a,
+    struct HT_EXPORT(htable) *b
 ));
 
 #ifndef __HT_INTERNAL
   #undef HT_EXTERN
-  #undef HT_FUNC
-  #undef HT_TYPE
   #undef HT_ARGS
+  #undef HT_EXPORT
 #endif
