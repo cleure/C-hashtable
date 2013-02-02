@@ -225,6 +225,7 @@ HT_ARGS((
     tmp_table.entries = new_entries;
     tmp_table.size = new_size;
     tmp_table.used = 0;
+    tmp_table.seed = table->seed;
     
     /* Iterate over source */
     for (i = 0; i < table->used; i++) {

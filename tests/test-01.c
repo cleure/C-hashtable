@@ -31,10 +31,10 @@ void *add_entries1(void *ptr)
     struct htable *table = ptr;
     
     for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
-        res = htable_add_loop(table, data[i], NULL, NULL, 4);
+        res = htable_add_loop(table, data[i], NULL, NULL, 10);
     
         if (!res) {
-            printf("Failed to add: %s\n", data[i]);
+            printf("Failed to add %s\n", data[i]);
         } else {
             printf("Added %s in %d tries\n", data[i], res);
         }
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 {
     int i;
     pthread_t thread1, thread2;
-    struct htable *table = htable_new(16);
+    struct htable *table = htable_new(4);
     
     pthread_create(&thread1, NULL, add_entries1, table);
     //pthread_create(&thread2, NULL, add_entries2, table);
