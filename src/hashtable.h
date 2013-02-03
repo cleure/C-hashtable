@@ -34,6 +34,14 @@ HT_ARGS((
     struct HT_EXPORT(htable_entry) *ptr
 ));
 
+/* htable_freefn type definition */
+typedef
+int (* HT_EXPORT(htable_cmpfn))
+HT_ARGS((
+    void *A,
+    void *B
+));
+
 /* Hash Table Entry */
 struct HT_EXPORT(htable_entry) {
     void *key;
@@ -49,6 +57,10 @@ struct HT_EXPORT(htable) {
     uint32_t size;
     uint32_t used;
     uint32_t seed;
+    
+    HT_EXPORT(htable_copyfn) copyfn;
+    HT_EXPORT(htable_freefn) freefn;
+    HT_EXPORT(htable_cmpfn) cmpfn;
 };
 
 /************************************************************************
