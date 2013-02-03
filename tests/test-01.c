@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 #include <pthread.h>
 #include <time.h>
 
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
     
     for (i = 0; i < table->used; i++) {
         printf("%p ", table->entries[i]);
-        printf("%d\t%s\n", table->entries[i]->hash, table->entries[i]->key);
+        printf("%d\t%s\n", table->entries[i]->hash, (char *)table->entries[i]->key);
     }
     
     /*printf("%d %d\n", table->used, sizeof(data)/sizeof(data[0]) + sizeof(data2)/sizeof(data2[0]));*/

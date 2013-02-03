@@ -23,7 +23,7 @@ typedef
 void (* HT_EXPORT(htable_copyfn))
 HT_ARGS((
     struct HT_EXPORT(htable_entry) *dst,
-    char *key,
+    void *key,
     void *data
 ));
 
@@ -36,7 +36,7 @@ HT_ARGS((
 
 /* Hash Table Entry */
 struct HT_EXPORT(htable_entry) {
-    char *key;
+    void *key;
     void *data;
     uint32_t entry;
     uint32_t hash;
@@ -143,7 +143,7 @@ HT_ARGS((
 * Add item to hash table. 
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @param    void *data
 * @param    void (*freefn)(struct htable_entry *)
 *               If not null, will be called when an item is replaced.
@@ -154,7 +154,7 @@ HT_EXTERN int
 HT_EXPORT(htable_add)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
-    char *key,
+    void *key,
     void *data,
     HT_EXPORT(htable_freefn) freefn
 ));
@@ -168,7 +168,7 @@ HT_ARGS((
 * relatively small.
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @param    void *data
 * @param    void (*freefn)(struct htable_entry *)
 *               If not null, will be called when an item is replaced.
@@ -181,7 +181,7 @@ HT_EXTERN int
 HT_EXPORT(htable_add_loop)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
-    char *key,
+    void *key,
     void *data,
     HT_EXPORT(htable_freefn) freefn,
     int max_loops
@@ -194,7 +194,7 @@ HT_ARGS((
 *
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @param    void (*freefn)(struct htable_entry *)
 *               If not null, will be called when an item is removed.
 *
@@ -204,7 +204,7 @@ HT_EXTERN int
 HT_EXPORT(htable_remove)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
-    char *key,
+    void *key,
     HT_EXPORT(htable_freefn) freefn
 ));
 
@@ -214,14 +214,14 @@ HT_ARGS((
 * Get entry from hash table.
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @return   NULL on error, pointer on success
 **/
 HT_EXTERN struct HT_EXPORT(htable_entry) *
 HT_EXPORT(htable_get)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
-    char *key
+    void *key
 ));
 
 /************************************************************************

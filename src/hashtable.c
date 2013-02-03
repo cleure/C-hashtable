@@ -64,7 +64,7 @@ HT_ARGS((uint32_t size))
 * @param    struct htable *src
 * @param    void (*copyfn)(
 *                   struct htable_entry *dst,
-*                   char *key
+*                   void *key
 *                   void *data)
 *
 *               If copyfn is NULL, then pointers will simply be linked. Use
@@ -264,7 +264,7 @@ HT_ARGS((
 * Add item to hash table. 
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @param    void *data
 * @param    void (*freefn)(struct htable_entry *)
 *               If not null, will be called when an item is replaced.
@@ -275,11 +275,12 @@ int
 HT_EXPORT(htable_add)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    char *key,
+    void *inpkey,
     void *data,
     HT_EXPORT(htable_freefn) freefn
 )) {
     
+    char *key = (char *)inpkey;
     uint32_t hash,
              step = 0;
     
@@ -330,7 +331,7 @@ HT_ARGS((
 * relatively small.
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @param    void *data
 * @param    void (*freefn)(struct htable_entry *)
 *               If not null, will be called when an item is replaced.
@@ -343,11 +344,12 @@ int
 HT_EXPORT(htable_add_loop)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    char *key,
+    void *inpkey,
     void *data,
     HT_EXPORT(htable_freefn) freefn,
     int max_loops
 )) {
+    char *key = (char *)inpkey;
     int loop;
     int chunk = table->size;
     int size = table->size;
@@ -376,7 +378,7 @@ HT_ARGS((
 *
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @param    void (*freefn)(struct htable_entry *)
 *               If not null, will be called when an item is removed.
 *
@@ -386,10 +388,11 @@ int
 HT_EXPORT(htable_remove)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    char *key,
+    void *inpkey,
     HT_EXPORT(htable_freefn) freefn
 )) {
 
+    char *key = (char *)inpkey;
     uint32_t hash,
              step = 0;
     
@@ -438,16 +441,17 @@ HT_ARGS((
 * Get entry from hash table.
 *
 * @param    struct htable *table
-* @param    char *key
+* @param    void *key
 * @return   NULL on error, pointer on success
 **/
 HT_STRUCT(htable_entry) *
 HT_EXPORT(htable_get)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    char *key
+    void *inpkey
 )) {
     
+    char *key = (char *)inpkey;
     uint32_t hash,
              step = 0;
     
