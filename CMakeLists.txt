@@ -20,7 +20,7 @@ include_directories(
 )
 
 set(HTABLE_SOURCES
-    src/MurmurHash3.cpp
+    src/MurmurHash3.c
     src/hashtable.c
 )
 

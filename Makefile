@@ -124,29 +124,29 @@ test-01/fast:
 	$(MAKE) -f CMakeFiles/test-01.dir/build.make CMakeFiles/test-01.dir/build
 .PHONY : test-01/fast
 
-src/MurmurHash3.o: src/MurmurHash3.cpp.o
+src/MurmurHash3.o: src/MurmurHash3.c.o
 .PHONY : src/MurmurHash3.o
 
 # target to build an object file
-src/MurmurHash3.cpp.o:
-	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.cpp.o
-.PHONY : src/MurmurHash3.cpp.o
+src/MurmurHash3.c.o:
+	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.c.o
+.PHONY : src/MurmurHash3.c.o
 
-src/MurmurHash3.i: src/MurmurHash3.cpp.i
+src/MurmurHash3.i: src/MurmurHash3.c.i
 .PHONY : src/MurmurHash3.i
 
 # target to preprocess a source file
-src/MurmurHash3.cpp.i:
-	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.cpp.i
-.PHONY : src/MurmurHash3.cpp.i
+src/MurmurHash3.c.i:
+	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.c.i
+.PHONY : src/MurmurHash3.c.i
 
-src/MurmurHash3.s: src/MurmurHash3.cpp.s
+src/MurmurHash3.s: src/MurmurHash3.c.s
 .PHONY : src/MurmurHash3.s
 
 # target to generate assembly for a file
-src/MurmurHash3.cpp.s:
-	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.cpp.s
-.PHONY : src/MurmurHash3.cpp.s
+src/MurmurHash3.c.s:
+	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.c.s
+.PHONY : src/MurmurHash3.c.s
 
 src/hashtable.o: src/hashtable.c.o
 .PHONY : src/hashtable.o
