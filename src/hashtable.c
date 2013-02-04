@@ -218,28 +218,6 @@ HT_ARGS((
         return NULL;
     }
     
-    /*
-struct HT_EXPORT(htable_entry) {
-    uint32_t key_size;
-    void *key;
-    void *data;
-    uint32_t entry;
-    uint32_t hash;
-};
-
-struct HT_EXPORT(htable) {
-    struct HT_EXPORT(htable_entry) *table;
-    struct HT_EXPORT(htable_entry) **entries;
-    uint32_t size;
-    uint32_t used;
-    uint32_t seed;
-    
-    HT_EXPORT(htable_copyfn) copyfn;
-    HT_EXPORT(htable_freefn) freefn;
-    HT_EXPORT(htable_cmpfn) cmpfn;
-};
-    */
-    
     /* Retain pointers */
     table = dst->table;
     entries = dst->entries;
