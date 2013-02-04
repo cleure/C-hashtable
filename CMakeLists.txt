@@ -6,7 +6,7 @@ find_library(PTHREAD_LIBRARY NAMES pthread)
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
 set (VERSION_PATCH 0)
-set (CMAKE_C_FLAGS "-Wall -g")
+set (CMAKE_C_FLAGS "-Wall -g -std=c89 -pedantic")
 
 configure_file (
     "${PROJECT_SOURCE_DIR}/config.h.in"

@@ -9,7 +9,6 @@
 
 int main(int argc, char **argv)
 {
-    int i;
     struct htable *table;
     
     srand(time(NULL));
