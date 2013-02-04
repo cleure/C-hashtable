@@ -229,10 +229,6 @@ HT_ARGS((
     /* Copy memory */
     memcpy(dst, src, sizeof(*dst));
     
-    /* Set pointers back to original */
-    dst->table = table;
-    dst->entries = entries;
-    
     /* Link pointers */
     dst->table = table;
     dst->entries = entries;
