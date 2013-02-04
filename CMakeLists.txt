@@ -26,5 +26,20 @@ set(HTABLE_SOURCES
 
 add_library(htable ${HTABLE_SOURCES})
 
-add_executable(test-01 tests/test-01.c)
-target_link_libraries(test-01 htable pthread)
+add_executable(tests/bin/test-01-new tests/test-01-new.c)
+target_link_libraries(tests/bin/test-01-new htable)
+
+add_executable(tests/bin/test-02-add tests/test-02-add.c)
+target_link_libraries(tests/bin/test-02-add htable)
+
+add_executable(tests/bin/test-03-clone tests/test-03-clone.c)
+target_link_libraries(tests/bin/test-03-clone htable)
+
+add_executable(tests/bin/test-04-resize tests/test-04-resize.c)
+target_link_libraries(tests/bin/test-04-resize htable)
+
+add_executable(tests/bin/test-05-update tests/test-05-update.c)
+target_link_libraries(tests/bin/test-05-update htable)
+
+add_executable(tests/bin/test-06-remove tests/test-06-remove.c)
+target_link_libraries(tests/bin/test-06-remove htable)

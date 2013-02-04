@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <stdint.h>
 #include <time.h>
+#include <limits.h>
 
 #include "config.h"
 
@@ -13,20 +14,150 @@
 
 #define HT_STRUCT(in) struct HT_EXPORT(in)
 
+#if __WORDSIZE == 64
+
+/**
+* Built int comparison function for 64-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+int
+HT_EXPORT(htable_int64_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+)) {
+    if (*(int64_t *)A == *(int64_t *)B) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+#endif
+
+/**
+* Built int comparison function for 32-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+int
+HT_EXPORT(htable_int32_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+)) {
+    if (*(int32_t *)A == *(int32_t *)B) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+/**
+* Built int comparison function for 16-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+int
+HT_EXPORT(htable_int16_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+)) {
+    if (*(int16_t *)A == *(int16_t *)B) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+/**
+* Built int comparison function for 8-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+int
+HT_EXPORT(htable_int8_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+)) {
+    if (*(int8_t *)A == *(int8_t *)B) {
+        return 0;
+    }
+    
+    return 1;
+}
+
+/**
+* Built int comparison function for C Strings.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+int
+HT_EXPORT(htable_cstring_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+)) {
+    char *a = (char *)A;
+    char *b = (char *)B;
+    
+    while (1) {
+        if (!*a && !*b) {
+            break;
+        } else if (*a++ != *b++) {
+            return 1;
+        }
+    }
+    
+    return 0;
+}
+
 /**
 * htable_new()
 *
 * Create a new hash table
 *
 * @param    uint32_t size
+* @param    uint32_t seed
+* @param    htable_cmpfn cmpfn
+*               - See function typedef prototypes for more information
+* @param    htable_copyfn copyfn
+*               - See function typedef prototypes for more information
+* @param    htable_freefn freefn
+*               - See function typedef prototypes for more information
 * @return   struct htable *
 *               NULL on error
 **/
 HT_STRUCT(htable) *
 HT_EXPORT(htable_new)
-HT_ARGS((uint32_t size))
-{
-    HT_STRUCT(htable) *table = malloc(sizeof(*table));
+HT_ARGS((
+    uint32_t size,
+    uint32_t random_seed,
+    HT_EXPORT(htable_cmpfn) cmpfn,
+    HT_EXPORT(htable_copyfn) copyfn,
+    HT_EXPORT(htable_freefn) freefn
+)) {
+    HT_STRUCT(htable) *table;
+    
+    /* cmpfn is required */
+    if (cmpfn == NULL) {
+        return NULL;
+    }
+    
+    table = malloc(sizeof(*table));
     if (!table) {
         return NULL;
     }
@@ -49,9 +180,10 @@ HT_ARGS((uint32_t size))
     memset(table->entries, 0, sizeof(*table->entries) * size);
     table->size = size;
     table->used = 0;
-    
-    srand(time(NULL));
-    table->seed = rand();
+    table->seed = random_seed;
+    table->copyfn = copyfn;
+    table->freefn = freefn;
+    table->cmpfn = cmpfn;
     
     return table;
 }
@@ -59,64 +191,82 @@ HT_ARGS((uint32_t size))
 /**
 * htable_clone()
 *
-* Clone hash table, returning new object.
+* Clone hash table, returning new object. If table->copyfn is not NULL,
+* it will be used to copy data into the new hash table.
 *
 * @param    struct htable *src
-* @param    void (*copyfn)(
-*                   struct htable_entry *dst,
-*                   void *key
-*                   void *data)
-*
-*               If copyfn is NULL, then pointers will simply be linked. Use
-*               copyfn when you need to explicitly copy your key and/or data.
-*
 * @return   struct htable *
 *               NULL on error
 **/
 HT_EXTERN HT_STRUCT(htable) *
 HT_EXPORT(htable_clone)
 HT_ARGS((
-    HT_STRUCT(htable) *src,
-    HT_EXPORT(htable_copyfn) copyfn
+    HT_STRUCT(htable) *src
 )) {
     
     uint32_t i, hash;
     
-    HT_STRUCT(htable) *dst = HT_EXPORT(htable_new)(src->size);
     HT_STRUCT(htable_entry) *table,
                             **entries;
+    
+    HT_STRUCT(htable) *dst = HT_EXPORT(htable_new)(
+                                    src->size,
+                                    src->seed,
+                                    src->cmpfn,
+                                    src->copyfn,
+                                    src->freefn);
     
     if (!dst) {
         return NULL;
     }
     
-    table = malloc(sizeof(*table) * src->size);
-    if (!table) {
-        free(dst);
-        return NULL;
-    }
+    /*
+struct HT_EXPORT(htable_entry) {
+    uint32_t key_size;
+    void *key;
+    void *data;
+    uint32_t entry;
+    uint32_t hash;
+};
+
+struct HT_EXPORT(htable) {
+    struct HT_EXPORT(htable_entry) *table;
+    struct HT_EXPORT(htable_entry) **entries;
+    uint32_t size;
+    uint32_t used;
+    uint32_t seed;
     
-    entries = malloc(sizeof(*entries) * src->size);
-    if (!entries) {
-        free(table);
-        free(dst);
-        return NULL;
-    }
+    HT_EXPORT(htable_copyfn) copyfn;
+    HT_EXPORT(htable_freefn) freefn;
+    HT_EXPORT(htable_cmpfn) cmpfn;
+};
+    */
+    
+    /* Retain pointers */
+    table = dst->table;
+    entries = dst->entries;
+    
+    /* Zero out tables */
+    memset(table, 0, sizeof(*table) * src->size);
+    memset(entries, 0, sizeof(*entries) * src->size);
     
     /* Copy memory */
     memcpy(dst, src, sizeof(*dst));
     
-    /* Zero out */
-    memset(table, 0, sizeof(*table) * src->size);
-    memset(entries, 0, sizeof(*entries) * src->size);
+    /* Set pointers back to original */
+    dst->table = table;
+    dst->entries = entries;
     
     /* Link pointers */
     dst->table = table;
     dst->entries = entries;
     
-    if (copyfn == NULL) {
+    if (src->copyfn == NULL) {
         for (i = 0; i < src->used; i++) {
+            /* TODO: Use memcpy()??? */
+        
             hash = src->entries[i]->hash;
+            dst->table[hash].key_size = src->entries[i]->key_size;
             dst->table[hash].key = src->entries[i]->key;
             dst->table[hash].data = src->entries[i]->data;
             dst->table[hash].entry = i;
@@ -127,7 +277,7 @@ HT_ARGS((
         for (i = 0; i < src->used; i++) {
             hash = src->entries[i]->hash;
             
-            copyfn(&dst->table[hash], src->entries[i]->key, src->entries[i]->data);
+            src->copyfn(&dst->table[hash], src->entries[i]->key, src->entries[i]->data);
             dst->entries[i] = &dst->table[hash];
         }
     }
@@ -138,28 +288,25 @@ HT_ARGS((
 /**
 * htable_delete()
 *
-* Delete hash table created by htable_new()
+* Delete hash table created by htable_new(). If table->freefn is not NULL,
+* it will be called for each element, so allocated memory can be freed.
 *
 * @param    struct htable *table
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called for each entry to free data
-*               allocated outside of the htable_* functions.
 * @return   void
 **/
 void
 HT_EXPORT(htable_delete)
 HT_ARGS((
-    HT_STRUCT(htable) *table,
-    HT_EXPORT(htable_freefn) freefn
+    HT_STRUCT(htable) *table
 )) {
     
     uint32_t i;
     
-    if (freefn != NULL) {
+    if (table->freefn != NULL) {
         for (i = 0; i < table->used; i++) {
             if (table->entries[i] && table->entries[i]->key) {
                 /* Call freefn() */
-                freefn(table->entries[i]);
+                table->freefn(table->entries[i]);
             }
         }
     }
@@ -226,6 +373,11 @@ HT_ARGS((
     tmp_table.size = new_size;
     tmp_table.used = 0;
     tmp_table.seed = table->seed;
+    /*tmp_table.copyfn = table->copyfn;*/
+    tmp_table.copyfn = NULL;
+    /*tmp_table.freefn = table->freefn;*/
+    tmp_table.freefn = NULL;
+    tmp_table.cmpfn = table->cmpfn;
     
     /* Iterate over source */
     for (i = 0; i < table->used; i++) {
@@ -233,9 +385,9 @@ HT_ARGS((
         /* Add entries to new table array */
         res = HT_EXPORT(htable_add)(
                         &tmp_table,
+                        table->entries[i]->key_size,
                         table->entries[i]->key,
-                        table->entries[i]->data,
-                        NULL);
+                        table->entries[i]->data);
         
         /* Catch error */
         if (!res) {
@@ -264,10 +416,11 @@ HT_ARGS((
 * Add item to hash table. 
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
 * @param    void *data
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called when an item is replaced.
 *
 * @return   0 on error, 1 on success
 **/
@@ -275,17 +428,16 @@ int
 HT_EXPORT(htable_add)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    void *inpkey,
-    void *data,
-    HT_EXPORT(htable_freefn) freefn
+    uint32_t key_size,
+    void *key,
+    void *data
 )) {
     
-    char *key = (char *)inpkey;
     uint32_t hash,
              step = 0;
     
     /* Get initial hash */
-    MurmurHash3_x86_32(key, strlen(key), table->seed, &hash);
+    MurmurHash3_x86_32(key, key_size, table->seed, &hash);
     
     do {
         /* Quadratic Probing Function:
@@ -294,11 +446,11 @@ HT_ARGS((
         
         if (table->table[hash].key == NULL) {
             goto insert;
-        } else if (strcmp(key, table->table[hash].key) == 0) {
+        } else if (table->cmpfn(key, table->table[hash].key) == 0) {
             /* Replace */
-            if (freefn != NULL) {
+            if (table->freefn != NULL) {
                 /* Call freefn() */
-                freefn(&(table->table[hash]));
+                table->freefn(&(table->table[hash]));
             }
             
             goto replace;
@@ -316,8 +468,13 @@ HT_ARGS((
             table->used++;
             
         replace:
-            table->table[hash].key = key;
-            table->table[hash].data = data;
+            table->table[hash].key_size = key_size;
+            if (table->copyfn) {
+                table->copyfn(&(table->table[hash]), key, data);
+            } else {
+                table->table[hash].key = key;
+                table->table[hash].data = data;
+            }
     
     return 1;
 }
@@ -331,10 +488,11 @@ HT_ARGS((
 * relatively small.
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
 * @param    void *data
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called when an item is replaced.
 * @param    int max_loops
 *
 * @return   0 on failure, otherwise the number of loops it took to
@@ -344,19 +502,18 @@ int
 HT_EXPORT(htable_add_loop)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    void *inpkey,
+    uint32_t key_size,
+    void *key,
     void *data,
-    HT_EXPORT(htable_freefn) freefn,
     int max_loops
 )) {
-    char *key = (char *)inpkey;
     int loop;
     int chunk = table->size;
     int size = table->size;
     
     max_loops++;
     for (loop = 1; loop < max_loops; loop++) {
-        if (HT_EXPORT(htable_add)(table, key, data, freefn)) {
+        if (HT_EXPORT(htable_add)(table, key_size, key, data)) {
             return loop;
         }
         
@@ -378,9 +535,10 @@ HT_ARGS((
 *
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called when an item is removed.
 *
 * @return   0 on error, 1 on success
 **/
@@ -388,27 +546,26 @@ int
 HT_EXPORT(htable_remove)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    void *inpkey,
-    HT_EXPORT(htable_freefn) freefn
+    uint32_t key_size,
+    void *key
 )) {
 
-    char *key = (char *)inpkey;
     uint32_t hash,
              step = 0;
     
     /* Get initial hash */
-    MurmurHash3_x86_32(key, strlen(key), table->seed, &hash);
+    MurmurHash3_x86_32(key, key_size, table->seed, &hash);
     
     do {
         /* Quadratic Probing */
         hash = (hash + (step * step - step) / 2) % table->size;
         
         if (    table->table[hash].key &&
-                strcmp(key, table->table[hash].key) == 0) {
+                table->cmpfn(key, table->table[hash].key) == 0) {
             
-            if (freefn != NULL) {
+            if (table->freefn != NULL) {
                 /* Call freefn() */
-                freefn(&table->table[hash]);
+                table->freefn(&table->table[hash]);
             }
             
             if (table->used > 0) {
@@ -441,29 +598,33 @@ HT_ARGS((
 * Get entry from hash table.
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
+*
 * @return   NULL on error, pointer on success
 **/
 HT_STRUCT(htable_entry) *
 HT_EXPORT(htable_get)
 HT_ARGS((
     HT_STRUCT(htable) *table,
-    void *inpkey
+    uint32_t key_size,
+    void *key
 )) {
     
-    char *key = (char *)inpkey;
     uint32_t hash,
              step = 0;
     
     /* Get initial hash */
-    MurmurHash3_x86_32(key, strlen(key), table->seed, &hash);
+    MurmurHash3_x86_32(key, key_size, table->seed, &hash);
     
     do {
         /* Quadratic Probing */
         hash = (hash + (step * step - step) / 2) % table->size;
         
         if (    table->table[hash].key &&
-                strcmp(key, table->table[hash].key) == 0) {
+                table->cmpfn(key, table->table[hash].key) == 0) {
             return &(table->table[hash]);
         }
         
@@ -525,7 +686,7 @@ HT_ARGS((
     head = list;
     
     for (i = 0; i < a->used; i++) {
-        tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key);
+        tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key_size, a->entries[i]->key);
         
         if (tmp != NULL) {
             list[0] = tmp;
@@ -588,7 +749,7 @@ HT_ARGS((
     head = list;
     
     for (i = 0; i < a->used; i++) {
-        tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key);
+        tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key_size, a->entries[i]->key);
         if (!tmp) {
             list[0] = a->entries[i];
             list++;

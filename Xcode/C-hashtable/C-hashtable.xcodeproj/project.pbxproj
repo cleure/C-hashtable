@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		6019BA5616C04EB400E0A744 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; name = bin; path = ../../bin; sourceTree = "<group>"; };
 		60D5D6B71649DAF900DD305F /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = CMakeLists.txt; path = ../../CMakeLists.txt; sourceTree = "<group>"; };
 		60D5D6B81649DAF900DD305F /* config.h.in */ = {isa = PBXFileReference; lastKnownFileType = text; name = config.h.in; path = ../../config.h.in; sourceTree = "<group>"; };
 		60D5D6B91649DAF900DD305F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
@@ -23,6 +24,7 @@
 				60D5D6B81649DAF900DD305F /* config.h.in */,
 				60D5D6B91649DAF900DD305F /* README.md */,
 				60D5D6BC1649EE0B00DD305F /* TODO.txt */,
+				6019BA5616C04EB400E0A744 /* bin */,
 				60D5D6BA1649DAF900DD305F /* src */,
 				60D5D6BB1649DB1F00DD305F /* tests */,
 			);

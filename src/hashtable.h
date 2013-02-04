@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <limits.h>
 #include "config.h"
 #include "hashtable-config.h"
 
@@ -34,7 +35,7 @@ HT_ARGS((
     struct HT_EXPORT(htable_entry) *ptr
 ));
 
-/* htable_freefn type definition */
+/* htable_cmpfn type definition. Returns 0 if A == B. */
 typedef
 int (* HT_EXPORT(htable_cmpfn))
 HT_ARGS((
@@ -44,6 +45,7 @@ HT_ARGS((
 
 /* Hash Table Entry */
 struct HT_EXPORT(htable_entry) {
+    uint32_t key_size;
     void *key;
     void *data;
     uint32_t entry;
@@ -64,6 +66,84 @@ struct HT_EXPORT(htable) {
 };
 
 /************************************************************************
+* Built-in comparison functions. See: htable_cmpfn typedef
+************************************************************************/
+
+#if __WORDSIZE == 64
+
+/**
+* Built int comparison function for 64-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+HT_EXTERN int
+HT_EXPORT(htable_int64_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+));
+
+#endif
+
+/**
+* Built int comparison function for 32-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+HT_EXTERN int
+HT_EXPORT(htable_int32_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+));
+
+/**
+* Built int comparison function for 16-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+HT_EXTERN int
+HT_EXPORT(htable_int16_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+));
+
+/**
+* Built int comparison function for 8-bit integers.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+HT_EXTERN int
+HT_EXPORT(htable_int8_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+));
+
+/**
+* Built int comparison function for C Strings.
+*
+* @param    void *A
+* @param    void *B
+* @return   int, zero if equal
+**/
+HT_EXTERN int
+HT_EXPORT(htable_cstring_cmpfn)
+HT_ARGS((
+    void *A,
+    void *B
+));
+
+/************************************************************************
 * Creation and maintenance functions
 ************************************************************************/
 
@@ -73,54 +153,55 @@ struct HT_EXPORT(htable) {
 * Create a new hash table
 *
 * @param    uint32_t size
+* @param    uint32_t seed
+* @param    htable_cmpfn cmpfn
+*               - See function typedef prototypes for more information
+* @param    htable_copyfn copyfn
+*               - See function typedef prototypes for more information
+* @param    htable_freefn freefn
+*               - See function typedef prototypes for more information
 * @return   struct htable *
 *               NULL on error
 **/
 HT_EXTERN struct HT_EXPORT(htable) *
 HT_EXPORT(htable_new)
 HT_ARGS((
-    uint32_t size
+    uint32_t size,
+    uint32_t random_seed,
+    HT_EXPORT(htable_cmpfn) cmpfn,
+    HT_EXPORT(htable_copyfn) copyfn,
+    HT_EXPORT(htable_freefn) freefn
 ));
 
 /**
 * htable_clone()
 *
-* Clone hash table, returning new object.
+* Clone hash table, returning new object. If table->copyfn is not NULL,
+* it will be used to copy data into the new hash table.
 *
 * @param    struct htable *src
-* @param    void (*copyfn)(
-*                   struct htable_entry *dst,
-*                   struct htable_entry *dst)
-*
-*               If copyfn is NULL, then pointers will simply be linked. Use
-*               copyfn when you need to explicitly copy your key and/or data.
-*
 * @return   struct htable *
 *               NULL on error
 **/
 HT_EXTERN struct HT_EXPORT(htable) *
 HT_EXPORT(htable_clone)
 HT_ARGS((
-    struct HT_EXPORT(htable) *src,
-    HT_EXPORT(htable_copyfn) copyfn
+    struct HT_EXPORT(htable) *src
 ));
 
 /**
 * htable_delete()
 *
-* Delete hash table created by htable_new()
+* Delete hash table created by htable_new(). If table->freefn is not NULL,
+* it will be called for each element, so allocated memory can be freed.
 *
 * @param    struct htable *table
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called for each entry to free data
-*               allocated outside of the htable_* functions.
 * @return   void
 **/
 HT_EXTERN void
 HT_EXPORT(htable_delete)
 HT_ARGS((
-    struct HT_EXPORT(htable) *table,
-    HT_EXPORT(htable_freefn) freefn
+    struct HT_EXPORT(htable) *table
 ));
 
 /**
@@ -155,10 +236,11 @@ HT_ARGS((
 * Add item to hash table. 
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
 * @param    void *data
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called when an item is replaced.
 *
 * @return   0 on error, 1 on success
 **/
@@ -166,9 +248,9 @@ HT_EXTERN int
 HT_EXPORT(htable_add)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
+    uint32_t key_size,
     void *key,
-    void *data,
-    HT_EXPORT(htable_freefn) freefn
+    void *data
 ));
 
 /**
@@ -180,10 +262,11 @@ HT_ARGS((
 * relatively small.
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
 * @param    void *data
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called when an item is replaced.
 * @param    int max_loops
 *
 * @return   0 on failure, otherwise the number of loops it took to
@@ -193,9 +276,9 @@ HT_EXTERN int
 HT_EXPORT(htable_add_loop)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
+    uint32_t key_size,
     void *key,
     void *data,
-    HT_EXPORT(htable_freefn) freefn,
     int max_loops
 ));
 
@@ -206,9 +289,10 @@ HT_ARGS((
 *
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
-* @param    void (*freefn)(struct htable_entry *)
-*               If not null, will be called when an item is removed.
 *
 * @return   0 on error, 1 on success
 **/
@@ -216,8 +300,8 @@ HT_EXTERN int
 HT_EXPORT(htable_remove)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
-    void *key,
-    HT_EXPORT(htable_freefn) freefn
+    uint32_t key_size,
+    void *key
 ));
 
 /**
@@ -226,13 +310,18 @@ HT_ARGS((
 * Get entry from hash table.
 *
 * @param    struct htable *table
+* @param    uint32_t key_size
+*               - sizeof(key) for ints
+*               - strlen(key) for strings
 * @param    void *key
+*
 * @return   NULL on error, pointer on success
 **/
 HT_EXTERN struct HT_EXPORT(htable_entry) *
 HT_EXPORT(htable_get)
 HT_ARGS((
     struct HT_EXPORT(htable) *table,
+    uint32_t key_size,
     void *key
 ));
 

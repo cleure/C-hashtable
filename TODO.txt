@@ -1,2 +1,3 @@
 
-- Built-in Thread Safety
+- Use function pointers attached to htable structure for copyfn/freefn/cmpfn
+- Built-in Thread Safety?

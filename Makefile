@@ -112,17 +112,82 @@ htable/fast:
 .PHONY : htable/fast
 
 #=============================================================================
-# Target rules for targets named test-01
+# Target rules for targets named tests/bin/test-01-new
 
 # Build rule for target.
-test-01: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test-01
-.PHONY : test-01
+tests/bin/test-01-new: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-01-new
+.PHONY : tests/bin/test-01-new
 
 # fast build rule for target.
-test-01/fast:
-	$(MAKE) -f CMakeFiles/test-01.dir/build.make CMakeFiles/test-01.dir/build
-.PHONY : test-01/fast
+tests/bin/test-01-new/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-01-new.dir/build.make CMakeFiles/tests/bin/test-01-new.dir/build
+.PHONY : tests/bin/test-01-new/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-02-add
+
+# Build rule for target.
+tests/bin/test-02-add: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-02-add
+.PHONY : tests/bin/test-02-add
+
+# fast build rule for target.
+tests/bin/test-02-add/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-02-add.dir/build.make CMakeFiles/tests/bin/test-02-add.dir/build
+.PHONY : tests/bin/test-02-add/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-03-clone
+
+# Build rule for target.
+tests/bin/test-03-clone: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-03-clone
+.PHONY : tests/bin/test-03-clone
+
+# fast build rule for target.
+tests/bin/test-03-clone/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-03-clone.dir/build.make CMakeFiles/tests/bin/test-03-clone.dir/build
+.PHONY : tests/bin/test-03-clone/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-04-resize
+
+# Build rule for target.
+tests/bin/test-04-resize: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-04-resize
+.PHONY : tests/bin/test-04-resize
+
+# fast build rule for target.
+tests/bin/test-04-resize/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-04-resize.dir/build.make CMakeFiles/tests/bin/test-04-resize.dir/build
+.PHONY : tests/bin/test-04-resize/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-05-update
+
+# Build rule for target.
+tests/bin/test-05-update: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-05-update
+.PHONY : tests/bin/test-05-update
+
+# fast build rule for target.
+tests/bin/test-05-update/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-05-update.dir/build.make CMakeFiles/tests/bin/test-05-update.dir/build
+.PHONY : tests/bin/test-05-update/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-06-remove
+
+# Build rule for target.
+tests/bin/test-06-remove: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-06-remove
+.PHONY : tests/bin/test-06-remove
+
+# fast build rule for target.
+tests/bin/test-06-remove/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-06-remove.dir/build.make CMakeFiles/tests/bin/test-06-remove.dir/build
+.PHONY : tests/bin/test-06-remove/fast
 
 src/MurmurHash3.o: src/MurmurHash3.c.o
 .PHONY : src/MurmurHash3.o
@@ -172,29 +237,149 @@ src/hashtable.c.s:
 	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/hashtable.c.s
 .PHONY : src/hashtable.c.s
 
-tests/test-01.o: tests/test-01.c.o
-.PHONY : tests/test-01.o
+tests/test-01-new.o: tests/test-01-new.c.o
+.PHONY : tests/test-01-new.o
 
 # target to build an object file
-tests/test-01.c.o:
-	$(MAKE) -f CMakeFiles/test-01.dir/build.make CMakeFiles/test-01.dir/tests/test-01.c.o
-.PHONY : tests/test-01.c.o
+tests/test-01-new.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-01-new.dir/build.make CMakeFiles/tests/bin/test-01-new.dir/tests/test-01-new.c.o
+.PHONY : tests/test-01-new.c.o
 
-tests/test-01.i: tests/test-01.c.i
-.PHONY : tests/test-01.i
+tests/test-01-new.i: tests/test-01-new.c.i
+.PHONY : tests/test-01-new.i
 
 # target to preprocess a source file
-tests/test-01.c.i:
-	$(MAKE) -f CMakeFiles/test-01.dir/build.make CMakeFiles/test-01.dir/tests/test-01.c.i
-.PHONY : tests/test-01.c.i
+tests/test-01-new.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-01-new.dir/build.make CMakeFiles/tests/bin/test-01-new.dir/tests/test-01-new.c.i
+.PHONY : tests/test-01-new.c.i
 
-tests/test-01.s: tests/test-01.c.s
-.PHONY : tests/test-01.s
+tests/test-01-new.s: tests/test-01-new.c.s
+.PHONY : tests/test-01-new.s
 
 # target to generate assembly for a file
-tests/test-01.c.s:
-	$(MAKE) -f CMakeFiles/test-01.dir/build.make CMakeFiles/test-01.dir/tests/test-01.c.s
-.PHONY : tests/test-01.c.s
+tests/test-01-new.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-01-new.dir/build.make CMakeFiles/tests/bin/test-01-new.dir/tests/test-01-new.c.s
+.PHONY : tests/test-01-new.c.s
+
+tests/test-02-add.o: tests/test-02-add.c.o
+.PHONY : tests/test-02-add.o
+
+# target to build an object file
+tests/test-02-add.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-02-add.dir/build.make CMakeFiles/tests/bin/test-02-add.dir/tests/test-02-add.c.o
+.PHONY : tests/test-02-add.c.o
+
+tests/test-02-add.i: tests/test-02-add.c.i
+.PHONY : tests/test-02-add.i
+
+# target to preprocess a source file
+tests/test-02-add.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-02-add.dir/build.make CMakeFiles/tests/bin/test-02-add.dir/tests/test-02-add.c.i
+.PHONY : tests/test-02-add.c.i
+
+tests/test-02-add.s: tests/test-02-add.c.s
+.PHONY : tests/test-02-add.s
+
+# target to generate assembly for a file
+tests/test-02-add.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-02-add.dir/build.make CMakeFiles/tests/bin/test-02-add.dir/tests/test-02-add.c.s
+.PHONY : tests/test-02-add.c.s
+
+tests/test-03-clone.o: tests/test-03-clone.c.o
+.PHONY : tests/test-03-clone.o
+
+# target to build an object file
+tests/test-03-clone.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-03-clone.dir/build.make CMakeFiles/tests/bin/test-03-clone.dir/tests/test-03-clone.c.o
+.PHONY : tests/test-03-clone.c.o
+
+tests/test-03-clone.i: tests/test-03-clone.c.i
+.PHONY : tests/test-03-clone.i
+
+# target to preprocess a source file
+tests/test-03-clone.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-03-clone.dir/build.make CMakeFiles/tests/bin/test-03-clone.dir/tests/test-03-clone.c.i
+.PHONY : tests/test-03-clone.c.i
+
+tests/test-03-clone.s: tests/test-03-clone.c.s
+.PHONY : tests/test-03-clone.s
+
+# target to generate assembly for a file
+tests/test-03-clone.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-03-clone.dir/build.make CMakeFiles/tests/bin/test-03-clone.dir/tests/test-03-clone.c.s
+.PHONY : tests/test-03-clone.c.s
+
+tests/test-04-resize.o: tests/test-04-resize.c.o
+.PHONY : tests/test-04-resize.o
+
+# target to build an object file
+tests/test-04-resize.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-04-resize.dir/build.make CMakeFiles/tests/bin/test-04-resize.dir/tests/test-04-resize.c.o
+.PHONY : tests/test-04-resize.c.o
+
+tests/test-04-resize.i: tests/test-04-resize.c.i
+.PHONY : tests/test-04-resize.i
+
+# target to preprocess a source file
+tests/test-04-resize.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-04-resize.dir/build.make CMakeFiles/tests/bin/test-04-resize.dir/tests/test-04-resize.c.i
+.PHONY : tests/test-04-resize.c.i
+
+tests/test-04-resize.s: tests/test-04-resize.c.s
+.PHONY : tests/test-04-resize.s
+
+# target to generate assembly for a file
+tests/test-04-resize.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-04-resize.dir/build.make CMakeFiles/tests/bin/test-04-resize.dir/tests/test-04-resize.c.s
+.PHONY : tests/test-04-resize.c.s
+
+tests/test-05-update.o: tests/test-05-update.c.o
+.PHONY : tests/test-05-update.o
+
+# target to build an object file
+tests/test-05-update.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-05-update.dir/build.make CMakeFiles/tests/bin/test-05-update.dir/tests/test-05-update.c.o
+.PHONY : tests/test-05-update.c.o
+
+tests/test-05-update.i: tests/test-05-update.c.i
+.PHONY : tests/test-05-update.i
+
+# target to preprocess a source file
+tests/test-05-update.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-05-update.dir/build.make CMakeFiles/tests/bin/test-05-update.dir/tests/test-05-update.c.i
+.PHONY : tests/test-05-update.c.i
+
+tests/test-05-update.s: tests/test-05-update.c.s
+.PHONY : tests/test-05-update.s
+
+# target to generate assembly for a file
+tests/test-05-update.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-05-update.dir/build.make CMakeFiles/tests/bin/test-05-update.dir/tests/test-05-update.c.s
+.PHONY : tests/test-05-update.c.s
+
+tests/test-06-remove.o: tests/test-06-remove.c.o
+.PHONY : tests/test-06-remove.o
+
+# target to build an object file
+tests/test-06-remove.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-06-remove.dir/build.make CMakeFiles/tests/bin/test-06-remove.dir/tests/test-06-remove.c.o
+.PHONY : tests/test-06-remove.c.o
+
+tests/test-06-remove.i: tests/test-06-remove.c.i
+.PHONY : tests/test-06-remove.i
+
+# target to preprocess a source file
+tests/test-06-remove.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-06-remove.dir/build.make CMakeFiles/tests/bin/test-06-remove.dir/tests/test-06-remove.c.i
+.PHONY : tests/test-06-remove.c.i
+
+tests/test-06-remove.s: tests/test-06-remove.c.s
+.PHONY : tests/test-06-remove.s
+
+# target to generate assembly for a file
+tests/test-06-remove.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-06-remove.dir/build.make CMakeFiles/tests/bin/test-06-remove.dir/tests/test-06-remove.c.s
+.PHONY : tests/test-06-remove.c.s
 
 # Help Target
 help:
@@ -205,16 +390,36 @@ help:
 	@echo "... edit_cache"
 	@echo "... htable"
 	@echo "... rebuild_cache"
-	@echo "... test-01"
+	@echo "... tests/bin/test-01-new"
+	@echo "... tests/bin/test-02-add"
+	@echo "... tests/bin/test-03-clone"
+	@echo "... tests/bin/test-04-resize"
+	@echo "... tests/bin/test-05-update"
+	@echo "... tests/bin/test-06-remove"
 	@echo "... src/MurmurHash3.o"
 	@echo "... src/MurmurHash3.i"
 	@echo "... src/MurmurHash3.s"
 	@echo "... src/hashtable.o"
 	@echo "... src/hashtable.i"
 	@echo "... src/hashtable.s"
-	@echo "... tests/test-01.o"
-	@echo "... tests/test-01.i"
-	@echo "... tests/test-01.s"
+	@echo "... tests/test-01-new.o"
+	@echo "... tests/test-01-new.i"
+	@echo "... tests/test-01-new.s"
+	@echo "... tests/test-02-add.o"
+	@echo "... tests/test-02-add.i"
+	@echo "... tests/test-02-add.s"
+	@echo "... tests/test-03-clone.o"
+	@echo "... tests/test-03-clone.i"
+	@echo "... tests/test-03-clone.s"
+	@echo "... tests/test-04-resize.o"
+	@echo "... tests/test-04-resize.i"
+	@echo "... tests/test-04-resize.s"
+	@echo "... tests/test-05-update.o"
+	@echo "... tests/test-05-update.i"
+	@echo "... tests/test-05-update.s"
+	@echo "... tests/test-06-remove.o"
+	@echo "... tests/test-06-remove.i"
+	@echo "... tests/test-06-remove.s"
 .PHONY : help
 
 
