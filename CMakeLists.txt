@@ -43,3 +43,15 @@ target_link_libraries(tests/bin/test-05-update htable)
 
 add_executable(tests/bin/test-06-remove tests/test-06-remove.c)
 target_link_libraries(tests/bin/test-06-remove htable)
+
+add_executable(tests/bin/test-07-get tests/test-07-get.c)
+target_link_libraries(tests/bin/test-07-get htable)
+
+add_executable(tests/bin/test-08-intersect tests/test-08-intersect.c)
+target_link_libraries(tests/bin/test-08-intersect htable)
+
+add_executable(tests/bin/test-09-difference tests/test-09-difference.c)
+target_link_libraries(tests/bin/test-09-difference htable)
+
+add_executable(tests/bin/test-10-integers tests/test-10-integers.c)
+target_link_libraries(tests/bin/test-10-integers htable)

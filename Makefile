@@ -189,6 +189,58 @@ tests/bin/test-06-remove/fast:
 	$(MAKE) -f CMakeFiles/tests/bin/test-06-remove.dir/build.make CMakeFiles/tests/bin/test-06-remove.dir/build
 .PHONY : tests/bin/test-06-remove/fast
 
+#=============================================================================
+# Target rules for targets named tests/bin/test-07-get
+
+# Build rule for target.
+tests/bin/test-07-get: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-07-get
+.PHONY : tests/bin/test-07-get
+
+# fast build rule for target.
+tests/bin/test-07-get/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-07-get.dir/build.make CMakeFiles/tests/bin/test-07-get.dir/build
+.PHONY : tests/bin/test-07-get/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-08-intersect
+
+# Build rule for target.
+tests/bin/test-08-intersect: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-08-intersect
+.PHONY : tests/bin/test-08-intersect
+
+# fast build rule for target.
+tests/bin/test-08-intersect/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-08-intersect.dir/build.make CMakeFiles/tests/bin/test-08-intersect.dir/build
+.PHONY : tests/bin/test-08-intersect/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-09-difference
+
+# Build rule for target.
+tests/bin/test-09-difference: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-09-difference
+.PHONY : tests/bin/test-09-difference
+
+# fast build rule for target.
+tests/bin/test-09-difference/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-09-difference.dir/build.make CMakeFiles/tests/bin/test-09-difference.dir/build
+.PHONY : tests/bin/test-09-difference/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-10-integers
+
+# Build rule for target.
+tests/bin/test-10-integers: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-10-integers
+.PHONY : tests/bin/test-10-integers
+
+# fast build rule for target.
+tests/bin/test-10-integers/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-10-integers.dir/build.make CMakeFiles/tests/bin/test-10-integers.dir/build
+.PHONY : tests/bin/test-10-integers/fast
+
 src/MurmurHash3.o: src/MurmurHash3.c.o
 .PHONY : src/MurmurHash3.o
 
@@ -381,6 +433,102 @@ tests/test-06-remove.c.s:
 	$(MAKE) -f CMakeFiles/tests/bin/test-06-remove.dir/build.make CMakeFiles/tests/bin/test-06-remove.dir/tests/test-06-remove.c.s
 .PHONY : tests/test-06-remove.c.s
 
+tests/test-07-get.o: tests/test-07-get.c.o
+.PHONY : tests/test-07-get.o
+
+# target to build an object file
+tests/test-07-get.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-07-get.dir/build.make CMakeFiles/tests/bin/test-07-get.dir/tests/test-07-get.c.o
+.PHONY : tests/test-07-get.c.o
+
+tests/test-07-get.i: tests/test-07-get.c.i
+.PHONY : tests/test-07-get.i
+
+# target to preprocess a source file
+tests/test-07-get.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-07-get.dir/build.make CMakeFiles/tests/bin/test-07-get.dir/tests/test-07-get.c.i
+.PHONY : tests/test-07-get.c.i
+
+tests/test-07-get.s: tests/test-07-get.c.s
+.PHONY : tests/test-07-get.s
+
+# target to generate assembly for a file
+tests/test-07-get.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-07-get.dir/build.make CMakeFiles/tests/bin/test-07-get.dir/tests/test-07-get.c.s
+.PHONY : tests/test-07-get.c.s
+
+tests/test-08-intersect.o: tests/test-08-intersect.c.o
+.PHONY : tests/test-08-intersect.o
+
+# target to build an object file
+tests/test-08-intersect.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-08-intersect.dir/build.make CMakeFiles/tests/bin/test-08-intersect.dir/tests/test-08-intersect.c.o
+.PHONY : tests/test-08-intersect.c.o
+
+tests/test-08-intersect.i: tests/test-08-intersect.c.i
+.PHONY : tests/test-08-intersect.i
+
+# target to preprocess a source file
+tests/test-08-intersect.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-08-intersect.dir/build.make CMakeFiles/tests/bin/test-08-intersect.dir/tests/test-08-intersect.c.i
+.PHONY : tests/test-08-intersect.c.i
+
+tests/test-08-intersect.s: tests/test-08-intersect.c.s
+.PHONY : tests/test-08-intersect.s
+
+# target to generate assembly for a file
+tests/test-08-intersect.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-08-intersect.dir/build.make CMakeFiles/tests/bin/test-08-intersect.dir/tests/test-08-intersect.c.s
+.PHONY : tests/test-08-intersect.c.s
+
+tests/test-09-difference.o: tests/test-09-difference.c.o
+.PHONY : tests/test-09-difference.o
+
+# target to build an object file
+tests/test-09-difference.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-09-difference.dir/build.make CMakeFiles/tests/bin/test-09-difference.dir/tests/test-09-difference.c.o
+.PHONY : tests/test-09-difference.c.o
+
+tests/test-09-difference.i: tests/test-09-difference.c.i
+.PHONY : tests/test-09-difference.i
+
+# target to preprocess a source file
+tests/test-09-difference.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-09-difference.dir/build.make CMakeFiles/tests/bin/test-09-difference.dir/tests/test-09-difference.c.i
+.PHONY : tests/test-09-difference.c.i
+
+tests/test-09-difference.s: tests/test-09-difference.c.s
+.PHONY : tests/test-09-difference.s
+
+# target to generate assembly for a file
+tests/test-09-difference.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-09-difference.dir/build.make CMakeFiles/tests/bin/test-09-difference.dir/tests/test-09-difference.c.s
+.PHONY : tests/test-09-difference.c.s
+
+tests/test-10-integers.o: tests/test-10-integers.c.o
+.PHONY : tests/test-10-integers.o
+
+# target to build an object file
+tests/test-10-integers.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-10-integers.dir/build.make CMakeFiles/tests/bin/test-10-integers.dir/tests/test-10-integers.c.o
+.PHONY : tests/test-10-integers.c.o
+
+tests/test-10-integers.i: tests/test-10-integers.c.i
+.PHONY : tests/test-10-integers.i
+
+# target to preprocess a source file
+tests/test-10-integers.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-10-integers.dir/build.make CMakeFiles/tests/bin/test-10-integers.dir/tests/test-10-integers.c.i
+.PHONY : tests/test-10-integers.c.i
+
+tests/test-10-integers.s: tests/test-10-integers.c.s
+.PHONY : tests/test-10-integers.s
+
+# target to generate assembly for a file
+tests/test-10-integers.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-10-integers.dir/build.make CMakeFiles/tests/bin/test-10-integers.dir/tests/test-10-integers.c.s
+.PHONY : tests/test-10-integers.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -396,6 +544,10 @@ help:
 	@echo "... tests/bin/test-04-resize"
 	@echo "... tests/bin/test-05-update"
 	@echo "... tests/bin/test-06-remove"
+	@echo "... tests/bin/test-07-get"
+	@echo "... tests/bin/test-08-intersect"
+	@echo "... tests/bin/test-09-difference"
+	@echo "... tests/bin/test-10-integers"
 	@echo "... src/MurmurHash3.o"
 	@echo "... src/MurmurHash3.i"
 	@echo "... src/MurmurHash3.s"
@@ -420,6 +572,18 @@ help:
 	@echo "... tests/test-06-remove.o"
 	@echo "... tests/test-06-remove.i"
 	@echo "... tests/test-06-remove.s"
+	@echo "... tests/test-07-get.o"
+	@echo "... tests/test-07-get.i"
+	@echo "... tests/test-07-get.s"
+	@echo "... tests/test-08-intersect.o"
+	@echo "... tests/test-08-intersect.i"
+	@echo "... tests/test-08-intersect.s"
+	@echo "... tests/test-09-difference.o"
+	@echo "... tests/test-09-difference.i"
+	@echo "... tests/test-09-difference.s"
+	@echo "... tests/test-10-integers.o"
+	@echo "... tests/test-10-integers.i"
+	@echo "... tests/test-10-integers.s"
 .PHONY : help
 
 
