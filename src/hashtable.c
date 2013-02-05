@@ -701,7 +701,7 @@ HT_ARGS((
 * Usage:
 *
 * uint32_t i;
-* struct htable_collection *list = htable_difference(a, b);
+* struct htable_collection *list = htable_intersect(a, b);
 * 
 * for (i = 0; i < list->used; i++) {
 *     printf("%s\n", (char *)(list->list[i]->key));
