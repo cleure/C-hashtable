@@ -652,9 +652,7 @@ HT_ARGS((
         return NULL;
     }
     
-    memset(list, 0, sizeof(*list) * (max_size+1));
     head = list;
-    
     for (i = 0; i < a->used; i++) {
         tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key_size, a->entries[i]->key);
         
@@ -663,7 +661,8 @@ HT_ARGS((
             list++;
         }
     }
-
+    
+    list[0] = NULL;
     return head;
 }
 
@@ -715,9 +714,7 @@ HT_ARGS((
         return NULL;
     }
     
-    memset(list, 0, sizeof(*list) * (max_size+1));
     head = list;
-    
     for (i = 0; i < a->used; i++) {
         tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key_size, a->entries[i]->key);
         if (!tmp) {
@@ -725,6 +722,7 @@ HT_ARGS((
             list++;
         }
     }
-
+    
+    list[0] = NULL;
     return head;
 }

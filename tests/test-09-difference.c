@@ -65,6 +65,8 @@ int main(int argc, char **argv)
     }
     
     difference = htable_difference(table, table2);
+    assert(difference[0] != NULL);
+    
     i = 0;
     while (difference[i]) {
         assert(strcmp(string_data[i], difference[i]->key) == 0);

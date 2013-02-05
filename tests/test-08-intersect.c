@@ -61,6 +61,8 @@ int main(int argc, char **argv)
     }
     
     intersect = htable_intersect(table, table2);
+    assert(intersect[0] != NULL);
+    
     i = 0;
     while (intersect[i]) {
         assert(strcmp(string_data[i], intersect[i]->key) == 0);
