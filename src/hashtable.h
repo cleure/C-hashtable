@@ -65,6 +65,13 @@ struct HT_EXPORT(htable) {
     HT_EXPORT(htable_cmpfn) cmpfn;
 };
 
+/* A collection of hash table entries */
+struct HT_EXPORT(htable_collection) {
+    uint32_t size;
+    uint32_t used;
+    struct HT_EXPORT(htable_entry) **list;
+};
+
 /************************************************************************
 * Built-in comparison functions. See: htable_cmpfn typedef
 ************************************************************************/
@@ -226,6 +233,45 @@ HT_ARGS((
     uint32_t new_size
 ));
 
+/**
+* Create new htable_collection object.
+*
+* @param    uint32_t size
+* @return   NULL on error
+**/
+HT_EXTERN
+struct HT_EXPORT(htable_collection) *
+HT_EXPORT(htable_collection_new)
+HT_ARGS((
+    uint32_t size
+));
+
+/**
+* Delete htable_collection object created by htable_collection_new
+*
+* @param    struct htable_collection *
+* @return   void
+**/
+HT_EXTERN void
+HT_EXPORT(htable_collection_delete)
+HT_ARGS((
+    struct HT_EXPORT(htable_collection) *collection
+));
+
+/**
+* Resize htable_collection object.
+*
+* @param    struct htable_collection *
+* @param    uint32_t size
+* @return   NULL on error
+**/
+int
+HT_EXPORT(htable_collection_resize)
+HT_ARGS((
+    struct HT_EXPORT(htable_collection) *collection,
+    uint32_t size
+));
+
 /************************************************************************
 * Manipulation functions
 ************************************************************************/
@@ -335,26 +381,26 @@ HT_ARGS((
 * Get intersection of two hash tables, by key. Entries in the list
 * are pointers to elements in b, thus free()'ing b and then trying
 * to access elements in the list will likely cause a segfault. The
-* returned list is created with malloc(), so the user should free
-* it once it's no longer needed.
+* returned list can be freed via the htable_collection_delete()
+* function.
 *
 * Usage:
 *
 * uint32_t i;
-* struct htable_entry **list = htable_intersect(a, b);
+* struct htable_collection *list = htable_difference(a, b);
 * 
-* for (i = 0; list[i]; i++) {
-*   printf("%s\n", list[i]->key);
+* for (i = 0; i < list->used; i++) {
+*     printf("%s\n", (char *)(list->list[i]->key));
 * }
 *
-* free(list);
+* htable_collection_delete(list);
 *
 * @param    struct htable *a
 * @param    struct htable *b
-* @return   struct htable_entry **
+* @return   struct htable_collection *
 *               NULL on error
 **/
-HT_EXTERN struct HT_EXPORT(htable_entry) **
+HT_EXTERN struct HT_EXPORT(htable_collection) *
 HT_EXPORT(htable_intersect)
 HT_ARGS((
     struct HT_EXPORT(htable) *a,
@@ -367,26 +413,26 @@ HT_ARGS((
 * Get difference of two hash tables, by key. Entries in the list
 * are pointers to elements in b, thus free()'ing b and then trying
 * to access elements in the list will likely cause a segfault. The
-* returned list is created with malloc(), so the user should free
-* it once it's no longer needed.
+* returned list can be freed via the htable_collection_delete()
+* function.
 *
 * Usage:
 *
 * uint32_t i;
-* struct htable_entry **list = htable_difference(a, b);
+* struct htable_collection *list = htable_difference(a, b);
 * 
-* for (i = 0; list[i]; i++) {
-*   printf("%s\n", list[i]->key);
+* for (i = 0; i < list->used; i++) {
+*     printf("%s\n", (char *)(list->list[i]->key));
 * }
 *
-* free(list);
+* htable_collection_delete(list);
 *
 * @param    struct htable *a
 * @param    struct htable *b
-* @return   struct htable_entry **
+* @return   struct htable_collection *
 *               NULL on error
 **/
-HT_EXTERN struct HT_EXPORT(htable_entry) **
+HT_EXTERN struct HT_EXPORT(htable_collection) *
 HT_EXPORT(htable_difference)
 HT_ARGS((
     struct HT_EXPORT(htable) *a,

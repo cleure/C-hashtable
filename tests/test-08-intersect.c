@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     int i, len, res;
     struct htable *table;
     struct htable *table2;
-    struct htable_entry **intersect;
+    struct htable_collection *collection;
     
     table = htable_new(512, 0, &htable_cstring_cmpfn, &string_copyfn, &string_freefn);
     assert(table != NULL);
@@ -60,16 +60,16 @@ int main(int argc, char **argv)
         assert(strcmp(table2->entries[i]->key, string_data2[i]) == 0);
     }
     
-    intersect = htable_intersect(table, table2);
-    assert(intersect[0] != NULL);
+    collection = htable_intersect(table, table2);
+    assert(collection != NULL);
+    assert(collection->list != NULL);
+    assert(collection->list[0] != NULL);
     
-    i = 0;
-    while (intersect[i]) {
-        assert(strcmp(string_data[i], intersect[i]->key) == 0);
-        i++;
+    for (i = 0; i < collection->used; i++) {
+        assert(strcmp(string_data[i], collection->list[i]->key) == 0);
     }
     
-    free(intersect);
+    htable_collection_delete(collection);
     htable_delete(table);
     htable_delete(table2);
     

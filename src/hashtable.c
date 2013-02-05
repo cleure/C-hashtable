@@ -381,6 +381,91 @@ HT_ARGS((
 }
 
 /**
+* Create new htable_collection object.
+*
+* @param    uint32_t size
+* @return   NULL on error
+**/
+HT_STRUCT(htable_collection) *
+HT_EXPORT(htable_collection_new)
+HT_ARGS((
+    uint32_t size
+)) {
+    HT_STRUCT(htable_collection) *collection
+        = malloc(sizeof(*collection));
+    
+    if (!collection) {
+        return NULL;
+    }
+    
+    memset(collection, 0, sizeof(*collection));
+    collection->list = malloc(sizeof(*(collection->list)) * size);
+    if (!collection->list) {
+        free(collection);
+        return NULL;
+    }
+    
+    collection->size = size;
+    collection->used = 0;
+    
+    return collection;
+}
+
+/**
+* Resize htable_collection object.
+*
+* @param    struct htable_collection *
+* @param    uint32_t size
+* @return   NULL on error
+**/
+int
+HT_EXPORT(htable_collection_resize)
+HT_ARGS((
+    HT_STRUCT(htable_collection) *collection,
+    uint32_t size
+)) {
+    HT_STRUCT(htable_entry) **new_list;
+    
+    if (size < collection->used) {
+        /* Elements wont fit */
+        return 0;
+    }
+    
+    new_list = malloc(sizeof(*new_list) * (size + 1));
+    if (!new_list) {
+        return 0;
+    }
+    
+    memcpy(new_list, collection->list, sizeof(*new_list) * (collection->used + 1));
+    free(collection->list);
+    collection->list = new_list;
+    
+    return 1;
+}
+
+/**
+* Delete htable_collection object created by htable_collection_new
+*
+* @param    struct htable_collection *
+* @return   void
+**/
+void
+HT_EXPORT(htable_collection_delete)
+HT_ARGS((
+    HT_STRUCT(htable_collection) *collection
+)) {
+    if (!collection) {
+        return;
+    }
+    
+    if (collection->list) {
+        free(collection->list);
+    }
+    
+    free(collection);
+}
+
+/**
 * htable_add()
 *
 * Add item to hash table. 
@@ -610,26 +695,26 @@ HT_ARGS((
 * Get intersection of two hash tables, by key. Entries in the list
 * are pointers to elements in b, thus free()'ing b and then trying
 * to access elements in the list will likely cause a segfault. The
-* returned list is created with malloc(), so the user should free
-* it once it's no longer needed.
+* returned list can be freed via the htable_collection_delete()
+* function.
 *
 * Usage:
 *
 * uint32_t i;
-* struct htable_entry **list = htable_intersect(a, b);
+* struct htable_collection *list = htable_difference(a, b);
 * 
-* for (i = 0; list[i]; i++) {
-*   printf("%s\n", list[i]->key);
+* for (i = 0; i < list->used; i++) {
+*     printf("%s\n", (char *)(list->list[i]->key));
 * }
 *
-* free(list);
+* htable_collection_delete(list);
 *
 * @param    struct htable *a
 * @param    struct htable *b
-* @return   struct htable_entry **
+* @return   struct htable_collection *
 *               NULL on error
 **/
-HT_STRUCT(htable_entry) **
+HT_STRUCT(htable_collection) *
 HT_EXPORT(htable_intersect)
 HT_ARGS((
     HT_STRUCT(htable) *a,
@@ -638,8 +723,9 @@ HT_ARGS((
 
     uint32_t max_size, i;
     
-    HT_STRUCT(htable_entry) **list, **head;
-    HT_STRUCT(htable_entry) *tmp;
+    HT_STRUCT(htable_collection) *collection;
+    HT_STRUCT(htable_entry) **list,
+                            *tmp;
 
     if (a->used > b->used) {
         max_size = a->used;
@@ -647,23 +733,24 @@ HT_ARGS((
         max_size = a->used;
     }
     
-    list = malloc(sizeof(*list) * (max_size+1));
-    if (!list) {
+    collection = HT_EXPORT(htable_collection_new)(max_size+1);
+    if (!collection) {
         return NULL;
     }
     
-    head = list;
+    list = collection->list;
     for (i = 0; i < a->used; i++) {
         tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key_size, a->entries[i]->key);
         
         if (tmp != NULL) {
             list[0] = tmp;
             list++;
+            collection->used++;
         }
     }
     
     list[0] = NULL;
-    return head;
+    return collection;
 }
 
 /**
@@ -672,26 +759,26 @@ HT_ARGS((
 * Get difference of two hash tables, by key. Entries in the list
 * are pointers to elements in b, thus free()'ing b and then trying
 * to access elements in the list will likely cause a segfault. The
-* returned list is created with malloc(), so the user should free
-* it once it's no longer needed.
+* returned list can be freed via the htable_collection_delete()
+* function.
 *
 * Usage:
 *
 * uint32_t i;
-* struct htable_entry **list = htable_difference(a, b);
+* struct htable_collection *list = htable_difference(a, b);
 * 
-* for (i = 0; list[i]; i++) {
-*   printf("%s\n", list[i]->key);
+* for (i = 0; i < list->used; i++) {
+*     printf("%s\n", (char *)(list->list[i]->key));
 * }
 *
-* free(list);
+* htable_collection_delete(list);
 *
 * @param    struct htable *a
 * @param    struct htable *b
-* @return   struct htable_entry **
+* @return   struct htable_collection *
 *               NULL on error
 **/
-HT_STRUCT(htable_entry) **
+HT_STRUCT(htable_collection) *
 HT_EXPORT(htable_difference)
 HT_ARGS((
     HT_STRUCT(htable) *a,
@@ -700,8 +787,8 @@ HT_ARGS((
 
     uint32_t max_size, i;
     
-    HT_STRUCT(htable_entry) **list, **head;
-    HT_STRUCT(htable_entry) *tmp;
+    HT_STRUCT(htable_collection) *collection;
+    HT_STRUCT(htable_entry) **list, *tmp;
     
     if (a->used > b->used) {
         max_size = a->used;
@@ -709,12 +796,12 @@ HT_ARGS((
         max_size = b->used;
     }
     
-    list = malloc(sizeof(*list) * (max_size+1));
-    if (!list) {
+    collection = HT_EXPORT(htable_collection_new)(max_size+1);
+    if (!collection) {
         return NULL;
     }
     
-    head = list;
+    list = collection->list;
     for (i = 0; i < a->used; i++) {
         tmp = HT_EXPORT(htable_get)(b, a->entries[i]->key_size, a->entries[i]->key);
         if (!tmp) {
@@ -724,5 +811,5 @@ HT_ARGS((
     }
     
     list[0] = NULL;
-    return head;
+    return collection;
 }
