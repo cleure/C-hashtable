@@ -345,9 +345,7 @@ HT_ARGS((
     tmp_table.size = new_size;
     tmp_table.used = 0;
     tmp_table.seed = table->seed;
-    /*tmp_table.copyfn = table->copyfn;*/
     tmp_table.copyfn = NULL;
-    /*tmp_table.freefn = table->freefn;*/
     tmp_table.freefn = NULL;
     tmp_table.cmpfn = table->cmpfn;
     

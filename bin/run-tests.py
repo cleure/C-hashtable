@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os, sys, subprocess
 
 TEST_BIN_PATH = 'tests/bin'
@@ -10,7 +12,7 @@ def main():
     
     for test in tests:
         assert_test = [test]
-        memory_test = ['valgrind', '--leak-check=full', '--error-exitcode=16', test]
+        memory_test = ['valgrind', '--leak-check=full', '--error-exitcode=6', test]
         
         print('Runnin Assert test for %s' % (test))
         p = subprocess.Popen(assert_test)
@@ -18,7 +20,7 @@ def main():
         if p.returncode != 0:
             print('Assert test failed for %s with code %d' % (test, p.returncode))
             print('Quitting')
-            sys.exit(16)
+            sys.exit(6)
         
         print('Assert test successful, no errors')
         print('Runnin Memory test for %s' % (test))
@@ -27,7 +29,7 @@ def main():
         if p.returncode != 0:
             print('Memory test failed for %s' % (test))
             print('Quitting')
-            sys.exit(16)
+            sys.exit(6)
         
         print('Memory test successful, no errors')
     
