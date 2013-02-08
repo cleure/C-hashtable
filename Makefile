@@ -8,7 +8,7 @@ default_target: all
 #=============================================================================
 # Special targets provided by cmake.
 
-# Disable implicit rules so canoncical targets will work.
+# Disable implicit rules so canonical targets will work.
 .SUFFIXES:
 
 # Remove some rules from gmake that .SUFFIXES does not remove.
@@ -34,6 +34,9 @@ CMAKE_COMMAND = /opt/local/bin/cmake
 
 # The command to remove a file.
 RM = /opt/local/bin/cmake -E remove -f
+
+# Escaping for special characters.
+EQUALS = =
 
 # The program to use to edit the cache.
 CMAKE_EDIT_COMMAND = /opt/local/bin/ccmake
@@ -241,12 +244,39 @@ tests/bin/test-10-integers/fast:
 	$(MAKE) -f CMakeFiles/tests/bin/test-10-integers.dir/build.make CMakeFiles/tests/bin/test-10-integers.dir/build
 .PHONY : tests/bin/test-10-integers/fast
 
+#=============================================================================
+# Target rules for targets named tests/bin/test-11-murmurhash3-c89
+
+# Build rule for target.
+tests/bin/test-11-murmurhash3-c89: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-11-murmurhash3-c89
+.PHONY : tests/bin/test-11-murmurhash3-c89
+
+# fast build rule for target.
+tests/bin/test-11-murmurhash3-c89/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build
+.PHONY : tests/bin/test-11-murmurhash3-c89/fast
+
+#=============================================================================
+# Target rules for targets named tests/bin/test-11-murmurhash3-cpp
+
+# Build rule for target.
+tests/bin/test-11-murmurhash3-cpp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tests/bin/test-11-murmurhash3-cpp
+.PHONY : tests/bin/test-11-murmurhash3-cpp
+
+# fast build rule for target.
+tests/bin/test-11-murmurhash3-cpp/fast:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build
+.PHONY : tests/bin/test-11-murmurhash3-cpp/fast
+
 src/MurmurHash3.o: src/MurmurHash3.c.o
 .PHONY : src/MurmurHash3.o
 
 # target to build an object file
 src/MurmurHash3.c.o:
 	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.c.o
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/src/MurmurHash3.c.o
 .PHONY : src/MurmurHash3.c.o
 
 src/MurmurHash3.i: src/MurmurHash3.c.i
@@ -255,6 +285,7 @@ src/MurmurHash3.i: src/MurmurHash3.c.i
 # target to preprocess a source file
 src/MurmurHash3.c.i:
 	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.c.i
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/src/MurmurHash3.c.i
 .PHONY : src/MurmurHash3.c.i
 
 src/MurmurHash3.s: src/MurmurHash3.c.s
@@ -263,7 +294,32 @@ src/MurmurHash3.s: src/MurmurHash3.c.s
 # target to generate assembly for a file
 src/MurmurHash3.c.s:
 	$(MAKE) -f CMakeFiles/htable.dir/build.make CMakeFiles/htable.dir/src/MurmurHash3.c.s
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/src/MurmurHash3.c.s
 .PHONY : src/MurmurHash3.c.s
+
+src/MurmurHash3.o: src/MurmurHash3.cpp.o
+.PHONY : src/MurmurHash3.o
+
+# target to build an object file
+src/MurmurHash3.cpp.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/src/MurmurHash3.cpp.o
+.PHONY : src/MurmurHash3.cpp.o
+
+src/MurmurHash3.i: src/MurmurHash3.cpp.i
+.PHONY : src/MurmurHash3.i
+
+# target to preprocess a source file
+src/MurmurHash3.cpp.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/src/MurmurHash3.cpp.i
+.PHONY : src/MurmurHash3.cpp.i
+
+src/MurmurHash3.s: src/MurmurHash3.cpp.s
+.PHONY : src/MurmurHash3.s
+
+# target to generate assembly for a file
+src/MurmurHash3.cpp.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/src/MurmurHash3.cpp.s
+.PHONY : src/MurmurHash3.cpp.s
 
 src/hashtable.o: src/hashtable.c.o
 .PHONY : src/hashtable.o
@@ -529,6 +585,33 @@ tests/test-10-integers.c.s:
 	$(MAKE) -f CMakeFiles/tests/bin/test-10-integers.dir/build.make CMakeFiles/tests/bin/test-10-integers.dir/tests/test-10-integers.c.s
 .PHONY : tests/test-10-integers.c.s
 
+tests/test-11-murmurhash3.o: tests/test-11-murmurhash3.c.o
+.PHONY : tests/test-11-murmurhash3.o
+
+# target to build an object file
+tests/test-11-murmurhash3.c.o:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/tests/test-11-murmurhash3.c.o
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/tests/test-11-murmurhash3.c.o
+.PHONY : tests/test-11-murmurhash3.c.o
+
+tests/test-11-murmurhash3.i: tests/test-11-murmurhash3.c.i
+.PHONY : tests/test-11-murmurhash3.i
+
+# target to preprocess a source file
+tests/test-11-murmurhash3.c.i:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/tests/test-11-murmurhash3.c.i
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/tests/test-11-murmurhash3.c.i
+.PHONY : tests/test-11-murmurhash3.c.i
+
+tests/test-11-murmurhash3.s: tests/test-11-murmurhash3.c.s
+.PHONY : tests/test-11-murmurhash3.s
+
+# target to generate assembly for a file
+tests/test-11-murmurhash3.c.s:
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-c89.dir/tests/test-11-murmurhash3.c.s
+	$(MAKE) -f CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/build.make CMakeFiles/tests/bin/test-11-murmurhash3-cpp.dir/tests/test-11-murmurhash3.c.s
+.PHONY : tests/test-11-murmurhash3.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -548,6 +631,11 @@ help:
 	@echo "... tests/bin/test-08-intersect"
 	@echo "... tests/bin/test-09-difference"
 	@echo "... tests/bin/test-10-integers"
+	@echo "... tests/bin/test-11-murmurhash3-c89"
+	@echo "... tests/bin/test-11-murmurhash3-cpp"
+	@echo "... src/MurmurHash3.o"
+	@echo "... src/MurmurHash3.i"
+	@echo "... src/MurmurHash3.s"
 	@echo "... src/MurmurHash3.o"
 	@echo "... src/MurmurHash3.i"
 	@echo "... src/MurmurHash3.s"
@@ -584,6 +672,9 @@ help:
 	@echo "... tests/test-10-integers.o"
 	@echo "... tests/test-10-integers.i"
 	@echo "... tests/test-10-integers.s"
+	@echo "... tests/test-11-murmurhash3.o"
+	@echo "... tests/test-11-murmurhash3.i"
+	@echo "... tests/test-11-murmurhash3.s"
 .PHONY : help
 
 

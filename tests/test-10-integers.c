@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     
     table = htable_new(512, 0, &htable_int32_cmpfn, &copyfn, &freefn);
     assert(table != NULL);
-        
+    
     len = sizeof(data)/sizeof(data[0]);
     for (i = 0; i < len; i++) {
         res = htable_add(table, 4, &data[i], NULL);

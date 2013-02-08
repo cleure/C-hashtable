@@ -55,3 +55,6 @@ target_link_libraries(tests/bin/test-09-difference htable)
 
 add_executable(tests/bin/test-10-integers tests/test-10-integers.c)
 target_link_libraries(tests/bin/test-10-integers htable)
+
+add_executable(tests/bin/test-11-murmurhash3-c89 src/MurmurHash3.cpp tests/test-11-murmurhash3.c)
+add_executable(tests/bin/test-11-murmurhash3-cpp src/MurmurHash3.c tests/test-11-murmurhash3.c)

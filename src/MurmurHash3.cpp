@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // MurmurHash3 was written by Austin Appleby, and is placed in the public
 // domain. The author hereby disclaims copyright to this source code.
 
@@ -6,21 +6,13 @@
 // algorithms are optimized for their respective platforms. You can still
 // compile and run any of them on any platform, but your performance with the
 // non-native version will be less than optimal.
-*/
 
 #include "MurmurHash3.h"
 
-/*-----------------------------------------------------------------------------
-// Since C89 doesn't support 64-bit integer constants with the LLU suffix, they
-// are computed into static constant variables at runtime when this is defined.
-*/
-#define MURMUR_C89_CONSTANT
-
-/*-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Platform-specific functions and macros
-*/
 
-/* Microsoft Visual Studio */
+// Microsoft Visual Studio
 
 #if defined(_MSC_VER)
 
@@ -33,18 +25,18 @@
 
 #define BIG_CONSTANT(x) (x)
 
-/* Other compilers */
+// Other compilers
 
-#else   /* defined(_MSC_VER) */
+#else   // defined(_MSC_VER)
 
 #define FORCE_INLINE __attribute__((always_inline))
 
-__inline uint32_t rotl32 ( uint32_t x, int8_t r )
+inline uint32_t rotl32 ( uint32_t x, int8_t r )
 {
   return (x << r) | (x >> (32 - r));
 }
 
-__inline uint64_t rotl64 ( uint64_t x, int8_t r )
+inline uint64_t rotl64 ( uint64_t x, int8_t r )
 {
   return (x << r) | (x >> (64 - r));
 }
@@ -54,28 +46,26 @@ __inline uint64_t rotl64 ( uint64_t x, int8_t r )
 
 #define BIG_CONSTANT(x) (x##LLU)
 
-#endif /* !defined(_MSC_VER) */
+#endif // !defined(_MSC_VER)
 
-/*-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Block read - if your platform needs to do endian-swapping or can only
 // handle aligned reads, do the conversion here
-*/
 
-FORCE_INLINE uint32_t getblock_32 ( const uint32_t * p, int i )
+FORCE_INLINE uint32_t getblock ( const uint32_t * p, int i )
 {
   return p[i];
 }
 
-FORCE_INLINE uint64_t getblock_64 ( const uint64_t * p, int i )
+FORCE_INLINE uint64_t getblock ( const uint64_t * p, int i )
 {
   return p[i];
 }
 
-/*-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Finalization mix - force all bits of a hash block to avalanche
-*/
 
-FORCE_INLINE uint32_t fmix_32 ( uint32_t h )
+FORCE_INLINE uint32_t fmix ( uint32_t h )
 {
   h ^= h >> 16;
   h *= 0x85ebca6b;
@@ -86,63 +76,40 @@ FORCE_INLINE uint32_t fmix_32 ( uint32_t h )
   return h;
 }
 
-/*----------*/
+//----------
 
-#ifdef MURMUR_C89_CONSTANT
-  static const uint64_t big_constant1 = (uint64_t)4283543511LU << 32 | (uint64_t)3981806797LU;
-  static const uint64_t big_constant2 = (uint64_t)3301882366LU << 32 | (uint64_t)444984403LU;
-#endif
-
-FORCE_INLINE uint64_t fmix_64 ( uint64_t k )
+FORCE_INLINE uint64_t fmix ( uint64_t k )
 {
   k ^= k >> 33;
-  
-  #ifdef MURMUR_C89_CONSTANT
-    k *= big_constant1;
-  #else
-    k *= BIG_CONSTANT(0xff51afd7ed558ccd);
-  #endif
-  
+  k *= BIG_CONSTANT(0xff51afd7ed558ccd);
   k ^= k >> 33;
-  
-  #ifdef MURMUR_C89_CONSTANT
-    k *= big_constant2;
-  #else
-    k *= BIG_CONSTANT(0xc4ceb9fe1a85ec53);
-  #endif
+  k *= BIG_CONSTANT(0xc4ceb9fe1a85ec53);
   k ^= k >> 33;
 
   return k;
 }
 
-/*-----------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 
-#ifdef __cplusplus
-extern "C"
-#endif
 void MurmurHash3_x86_32 ( const void * key, int len,
                           uint32_t seed, void * out )
 {
-  int i;
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 4;
 
   uint32_t h1 = seed;
-  uint32_t k1;
 
   const uint32_t c1 = 0xcc9e2d51;
   const uint32_t c2 = 0x1b873593;
 
-  /*----------
+  //----------
   // body
-  */
 
   const uint32_t * blocks = (const uint32_t *)(data + nblocks*4);
-  const uint8_t * tail = (const uint8_t*)(data + nblocks*4);
 
-  for(i = -nblocks; i; i++)
+  for(int i = -nblocks; i; i++)
   {
-    k1 = getblock_32(blocks,i);
+    uint32_t k1 = getblock(blocks,i);
 
     k1 *= c1;
     k1 = ROTL32(k1,15);
@@ -153,11 +120,12 @@ void MurmurHash3_x86_32 ( const void * key, int len,
     h1 = h1*5+0xe6546b64;
   }
 
-  /*----------
+  //----------
   // tail
-  */
 
-  k1 = 0;
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*4);
+
+  uint32_t k1 = 0;
 
   switch(len & 3)
   {
@@ -167,26 +135,21 @@ void MurmurHash3_x86_32 ( const void * key, int len,
           k1 *= c1; k1 = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
   };
 
-  /*----------
+  //----------
   // finalization
-  */
 
   h1 ^= len;
 
-  h1 = fmix_32(h1);
+  h1 = fmix(h1);
 
   *(uint32_t*)out = h1;
 } 
 
-/*-----------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 
-#ifdef __cplusplus
-extern "C"
-#endif
 void MurmurHash3_x86_128 ( const void * key, const int len,
                            uint32_t seed, void * out )
 {
-  int i;
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 16;
 
@@ -194,30 +157,23 @@ void MurmurHash3_x86_128 ( const void * key, const int len,
   uint32_t h2 = seed;
   uint32_t h3 = seed;
   uint32_t h4 = seed;
-  
-  uint32_t k1;
-  uint32_t k2;
-  uint32_t k3;
-  uint32_t k4;
 
   const uint32_t c1 = 0x239b961b; 
   const uint32_t c2 = 0xab0e9789;
   const uint32_t c3 = 0x38b34ae5; 
   const uint32_t c4 = 0xa1e38b93;
 
-  /*----------
+  //----------
   // body
-  */
 
   const uint32_t * blocks = (const uint32_t *)(data + nblocks*16);
-  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
 
-  for(i = -nblocks; i; i++)
+  for(int i = -nblocks; i; i++)
   {
-    k1 = getblock_32(blocks,i*4+0);
-    k2 = getblock_32(blocks,i*4+1);
-    k3 = getblock_32(blocks,i*4+2);
-    k4 = getblock_32(blocks,i*4+3);
+    uint32_t k1 = getblock(blocks,i*4+0);
+    uint32_t k2 = getblock(blocks,i*4+1);
+    uint32_t k3 = getblock(blocks,i*4+2);
+    uint32_t k4 = getblock(blocks,i*4+3);
 
     k1 *= c1; k1  = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
 
@@ -236,14 +192,15 @@ void MurmurHash3_x86_128 ( const void * key, const int len,
     h4 = ROTL32(h4,13); h4 += h1; h4 = h4*5+0x32ac3b17;
   }
 
-  /*----------
+  //----------
   // tail
-  */
 
-  k1 = 0;
-  k2 = 0;
-  k3 = 0;
-  k4 = 0;
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+
+  uint32_t k1 = 0;
+  uint32_t k2 = 0;
+  uint32_t k3 = 0;
+  uint32_t k4 = 0;
 
   switch(len & 15)
   {
@@ -271,19 +228,18 @@ void MurmurHash3_x86_128 ( const void * key, const int len,
            k1 *= c1; k1  = ROTL32(k1,15); k1 *= c2; h1 ^= k1;
   };
 
-  /*----------
+  //----------
   // finalization
-  */
 
   h1 ^= len; h2 ^= len; h3 ^= len; h4 ^= len;
 
   h1 += h2; h1 += h3; h1 += h4;
   h2 += h1; h3 += h1; h4 += h1;
 
-  h1 = fmix_32(h1);
-  h2 = fmix_32(h2);
-  h3 = fmix_32(h3);
-  h4 = fmix_32(h4);
+  h1 = fmix(h1);
+  h2 = fmix(h2);
+  h3 = fmix(h3);
+  h4 = fmix(h4);
 
   h1 += h2; h1 += h3; h1 += h4;
   h2 += h1; h3 += h1; h4 += h1;
@@ -294,39 +250,29 @@ void MurmurHash3_x86_128 ( const void * key, const int len,
   ((uint32_t*)out)[3] = h4;
 }
 
-/*-----------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 
 void MurmurHash3_x64_128 ( const void * key, const int len,
                            const uint32_t seed, void * out )
 {
-  int i;
   const uint8_t * data = (const uint8_t*)key;
   const int nblocks = len / 16;
 
   uint64_t h1 = seed;
   uint64_t h2 = seed;
-  uint64_t k1;
-  uint64_t k2;
 
-  #ifdef MURMUR_C89_CONSTANT
-    static const uint64_t c1 = (uint64_t)2277735313LU << 32 | (uint64_t)289559509LU;
-    static const uint64_t c2 = (uint64_t)1291169091LU << 32 | (uint64_t)658871167LU;
-  #else
-    const uint64_t c1 = BIG_CONSTANT(0x87c37b91114253d5);
-    const uint64_t c2 = BIG_CONSTANT(0x4cf5ad432745937f);
-  #endif
+  const uint64_t c1 = BIG_CONSTANT(0x87c37b91114253d5);
+  const uint64_t c2 = BIG_CONSTANT(0x4cf5ad432745937f);
 
-  /*----------
+  //----------
   // body
-  */
 
   const uint64_t * blocks = (const uint64_t *)(data);
-  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
 
-  for(i = 0; i < nblocks; i++)
+  for(int i = 0; i < nblocks; i++)
   {
-    k1 = getblock_64(blocks,i*2+0);
-    k2 = getblock_64(blocks,i*2+1);
+    uint64_t k1 = getblock(blocks,i*2+0);
+    uint64_t k2 = getblock(blocks,i*2+1);
 
     k1 *= c1; k1  = ROTL64(k1,31); k1 *= c2; h1 ^= k1;
 
@@ -337,46 +283,46 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
     h2 = ROTL64(h2,31); h2 += h1; h2 = h2*5+0x38495ab5;
   }
 
-  /*----------
+  //----------
   // tail
-  */
 
-  k1 = 0;
-  k2 = 0;
+  const uint8_t * tail = (const uint8_t*)(data + nblocks*16);
+
+  uint64_t k1 = 0;
+  uint64_t k2 = 0;
 
   switch(len & 15)
   {
-  case 15: k2 ^= (uint64_t)(tail[14]) << 48;
-  case 14: k2 ^= (uint64_t)(tail[13]) << 40;
-  case 13: k2 ^= (uint64_t)(tail[12]) << 32;
-  case 12: k2 ^= (uint64_t)(tail[11]) << 24;
-  case 11: k2 ^= (uint64_t)(tail[10]) << 16;
-  case 10: k2 ^= (uint64_t)(tail[ 9]) << 8;
-  case  9: k2 ^= (uint64_t)(tail[ 8]) << 0;
+  case 15: k2 ^= uint64_t(tail[14]) << 48;
+  case 14: k2 ^= uint64_t(tail[13]) << 40;
+  case 13: k2 ^= uint64_t(tail[12]) << 32;
+  case 12: k2 ^= uint64_t(tail[11]) << 24;
+  case 11: k2 ^= uint64_t(tail[10]) << 16;
+  case 10: k2 ^= uint64_t(tail[ 9]) << 8;
+  case  9: k2 ^= uint64_t(tail[ 8]) << 0;
            k2 *= c2; k2  = ROTL64(k2,33); k2 *= c1; h2 ^= k2;
 
-  case  8: k1 ^= (uint64_t)(tail[ 7]) << 56;
-  case  7: k1 ^= (uint64_t)(tail[ 6]) << 48;
-  case  6: k1 ^= (uint64_t)(tail[ 5]) << 40;
-  case  5: k1 ^= (uint64_t)(tail[ 4]) << 32;
-  case  4: k1 ^= (uint64_t)(tail[ 3]) << 24;
-  case  3: k1 ^= (uint64_t)(tail[ 2]) << 16;
-  case  2: k1 ^= (uint64_t)(tail[ 1]) << 8;
-  case  1: k1 ^= (uint64_t)(tail[ 0]) << 0;
+  case  8: k1 ^= uint64_t(tail[ 7]) << 56;
+  case  7: k1 ^= uint64_t(tail[ 6]) << 48;
+  case  6: k1 ^= uint64_t(tail[ 5]) << 40;
+  case  5: k1 ^= uint64_t(tail[ 4]) << 32;
+  case  4: k1 ^= uint64_t(tail[ 3]) << 24;
+  case  3: k1 ^= uint64_t(tail[ 2]) << 16;
+  case  2: k1 ^= uint64_t(tail[ 1]) << 8;
+  case  1: k1 ^= uint64_t(tail[ 0]) << 0;
            k1 *= c1; k1  = ROTL64(k1,31); k1 *= c2; h1 ^= k1;
   };
 
-  /*----------
+  //----------
   // finalization
-  */
 
   h1 ^= len; h2 ^= len;
 
   h1 += h2;
   h2 += h1;
 
-  h1 = fmix_64(h1);
-  h2 = fmix_64(h2);
+  h1 = fmix(h1);
+  h2 = fmix(h2);
 
   h1 += h2;
   h2 += h1;
@@ -385,4 +331,4 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
   ((uint64_t*)out)[1] = h2;
 }
 
-/*-----------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------

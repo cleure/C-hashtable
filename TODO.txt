@@ -1,4 +1,2 @@
 
-- Use function pointers attached to htable structure for copyfn/freefn/cmpfn
-- Make MurmurHash3 compile with -pedantic (long constants, and variable declarations)
 - Built-in Thread Safety?
