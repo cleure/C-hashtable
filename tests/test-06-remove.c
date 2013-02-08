@@ -6,7 +6,6 @@
 
 #include "config.h"
 #include "hashtable.h"
-#include "MurmurHash3.h"
 
 char *string_data[] = {
         "foo", "bar", "baz", "biz", "zap", "meow",

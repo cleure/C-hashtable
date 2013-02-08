@@ -6,7 +6,6 @@
 
 #include "config.h"
 #include "hashtable.h"
-#include "MurmurHash3.h"
 
 int data[] = {
     2, 4, 8, 16, 32, 64, 128, 256, 512,
