@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     for (input = 0; input < UINT_MAX-step; input += step) {
         input128[0] = input;
         input128[1] = input * 2;
-        input128[2] = input * 2 / 4;
+        input128[2] = input / 2;
         input128[3] = input * 4;
         
         MurmurHash3_x86_128(&input128, sizeof(input128), seed, &hash128);
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     for (input = 0; input < UINT_MAX-step; input += step) {
         input128[0] = input;
         input128[1] = input * 2;
-        input128[2] = input * 2 / 4;
+        input128[2] = input / 2;
         input128[3] = input * 4;
         
         MurmurHash3_x64_128(&input128, sizeof(input128), seed, &hash128_64);
